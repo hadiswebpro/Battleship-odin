@@ -1,9 +1,16 @@
 import Player from "./player";
 
 export default class Game {
-  constructor() {
-    this.player1 = new Player("Player 1", "green");
-    this.player2 = new Player("Player 2", "red");
+  constructor(mode = "computer") {
+    this.mode = mode;
+
+    this.player1 = new Player("Player", "green");
+
+    this.player2 = new Player(
+      mode === "computer" ? "Computer" : "Player 2",
+      "red"
+    );
+
     this.currentPlayer = this.player1;
   }
 
@@ -40,13 +47,8 @@ export default class Game {
   }
 
   getWinner() {
-    if (this.player2.gameboard.allShipsSunk()) {
-      return this.player1;
-    }
-
-    if (this.player1.gameboard.allShipsSunk()) {
-      return this.player2;
-    }
+    if (this.player2.gameboard.allShipsSunk()) return this.player1;
+    if (this.player1.gameboard.allShipsSunk()) return this.player2;
 
     return null;
   }
