@@ -177,9 +177,6 @@ function start(mode){
 // ======================
 
 
-// چون confirm button داخل dom ساخته می‌شود
-// بعد از کامل شدن placement پیدا می‌کنیم
-
 
 document.addEventListener(
   "click",
@@ -247,18 +244,13 @@ document.addEventListener(
 
 
       addAttackListener(
-
-        enemyBoard,
-
-        game,
-
-        ()=>{
-
-          showWinnerModal(game);
-
-        }
-
-      );
+  enemyBoard,
+  game,
+  playerBoard,
+  ()=>{
+    showWinnerModal(game);
+  }
+);
 
 
     }

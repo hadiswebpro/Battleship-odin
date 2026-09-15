@@ -459,79 +459,76 @@ export function showWinnerModal(game){
 
 
 
-
 export function addAttackListener(
   boardElement,
   game,
+  playerBoardElement,
   onGameOver
-){
-
+) {
 
   boardElement.addEventListener(
     "click",
-    event=>{
+    event => {
+
+      const cell = event.target;
 
 
-      const cell =
-      event.target;
-
-
-
-      if(!cell.classList.contains("cell"))
+      if (!cell.classList.contains("cell"))
         return;
 
 
-
-      const coordinate=[
-
+      const coordinate = [
         Number(cell.dataset.row),
-
         Number(cell.dataset.col)
-
       ];
 
 
-
-      const result =
-      game.playTurn(coordinate);
-
-      if (
-  game.mode === "computer" &&
-  !game.isGameOver()
-) {
-
-  setTimeout(() => {
-
-    createBoard(
-      document.querySelector("#player-board"),
-      game.player1.gameboard,
-      game.player1.name
-    );
-
-  }, 500);
-
-}
+      const result = game.playTurn(coordinate);
 
 
-      if(result==="already")
+
+      if (result === "already")
         return;
 
 
 
+      // نمایش تیر بازیکن روی برد دشمن
       cell.classList.add(
-        result==="hit"
-        ? "hit"
-        : "miss"
+        result === "hit"
+          ? "hit"
+          : "miss"
       );
 
 
 
-      if(game.isGameOver())
+      // حمله کامپیوتر
+      if (
+        game.mode === "computer" &&
+        !game.isGameOver()
+      ) {
+
+
+        setTimeout(() => {
+
+
+          createBoard(
+            playerBoardElement,
+            game.player1.gameboard,
+            game.player1.name
+          );
+
+
+        }, 600);
+
+      }
+
+
+
+      if (game.isGameOver())
         onGameOver();
 
 
     }
   );
-
 
 }
