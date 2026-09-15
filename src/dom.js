@@ -1,3 +1,5 @@
+import shipImage from "./images/ship.jpg";
+
 export function createBoard(element, gameboard = null, playerName = "") {
   element.innerHTML = "";
   element.classList.add("board-wrapper");
@@ -23,8 +25,10 @@ export function createBoard(element, gameboard = null, playerName = "") {
 
       if (ship) {
         cell.classList.add("ship");
-        cell.dataset.ship = "true";
-        cell.textContent = "🚢";
+        const image = document.createElement("img");
+        image.src = shipImage;
+        image.alt = "ship";
+        cell.appendChild(image);
       }
 
       board.appendChild(cell);
@@ -40,48 +44,85 @@ export function createPlacementBoard(element, player, onComplete) {
   const ships = player.shipLengths;
 
   player.clearBoard();
+  renderPlacement();
 
-  createBoard(element, player.gameboard, player.name);
+  function renderPlacement() {
+    createBoard(element, player.gameboard, player.name);
 
-  const button = document.createElement("button");
-  button.textContent = "Rotate Ship ↻";
-  button.className = "rotate-ship";
-  element.appendChild(button);
+    const button = document.createElement("button");
+    button.textContent = "Rotate Ship ↻";
+    button.className = "rotate-ship";
+    element.appendChild(button);
 
-  button.addEventListener("click", () => {
-    horizontal = !horizontal;
-  });
+    button.addEventListener("click", () => {
+      horizontal = !horizontal;
+    });
 
-  const cells = element.querySelectorAll(".cell");
+    const cells = element.querySelectorAll(".cell");
 
-  cells.forEach((cell) => {
-    cell.addEventListener("click", () => {
-      if (currentShipIndex >= ships.length) return;
+    cells.forEach((cell) => {
+      cell.addEventListener("mouseenter", () => {
+        previewShip(cell);
+      });
 
-      const row = Number(cell.dataset.row);
-      const col = Number(cell.dataset.col);
-      const length = ships[currentShipIndex];
-      const coordinates = [];
+      cell.addEventListener("mouseleave", clearPreview);
 
-      for (let i = 0; i < length; i++) {
-        const r = horizontal ? row : row + i;
-        const c = horizontal ? col + i : col;
+      cell.addEventListener("click", () => {
+        placeFromCell(cell);
+      });
+    });
+  }
 
-        if (r > 9 || c > 9) return;
-        coordinates.push([r, c]);
+  function previewShip(cell) {
+    clearPreview();
+
+    const coordinates = getCoordinates(cell);
+    coordinates.forEach(([r, c]) => {
+      const target = element.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+      if (target) target.classList.add("preview");
+    });
+  }
+
+  function clearPreview() {
+    element.querySelectorAll(".preview").forEach((cell) => {
+      cell.classList.remove("preview");
+    });
+  }
+
+  function getCoordinates(cell) {
+    const length = ships[currentShipIndex];
+    const row = Number(cell.dataset.row);
+    const col = Number(cell.dataset.col);
+    const coordinates = [];
+
+    for (let i = 0; i < length; i++) {
+      const r = horizontal ? row : row + i;
+      const c = horizontal ? col + i : col;
+      if (r > 9 || c > 9) return [];
+      coordinates.push([r, c]);
+    }
+
+    return coordinates;
+  }
+
+  function placeFromCell(cell) {
+    if (currentShipIndex >= ships.length) return;
+
+    const coordinates = getCoordinates(cell);
+    if (!coordinates.length) return;
+
+    try {
+      player.placeShip(ships[currentShipIndex], coordinates);
+      currentShipIndex++;
+
+      if (currentShipIndex === ships.length) {
+        onComplete();
+        return;
       }
 
-      try {
-        player.placeShip(length, coordinates);
-        currentShipIndex++;
-        createPlacementBoard(element, player, onComplete);
-
-        if (currentShipIndex === ships.length) {
-          onComplete();
-        }
-      } catch (error) {}
-    });
-  });
+      renderPlacement();
+    } catch (error) {}
+  }
 }
 
 export function showWinnerModal(game) {
