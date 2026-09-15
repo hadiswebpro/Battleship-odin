@@ -14,14 +14,25 @@ export default class Player {
   }
 
   placeShips() {
-    this.shipLengths.forEach((length) => {
-      let placed = false;
+    const fleet = [5, 4, 3, 3, 2];
 
-      while (!placed) {
+    fleet.forEach((length) => {
+      let placed = false;
+      let attempts = 0;
+
+      while (!placed && attempts < 1000) {
+        attempts += 1;
+
         try {
           this.placeShip(length, this.generateCoordinates(length));
           placed = true;
-        } catch (error) {}
+        } catch (error) {
+          // Try another random position when the placement overlaps.
+        }
+      }
+
+      if (!placed) {
+        throw new Error(`Could not place ship of length ${length}`);
       }
     });
   }
@@ -53,6 +64,8 @@ export default class Player {
   }
 
   attack(enemyBoard, coordinate) {
+    if (this.attacksMade.has(coordinate.toString())) return "already";
+
     this.attacksMade.add(coordinate.toString());
     return enemyBoard.receiveAttack(coordinate);
   }
@@ -74,9 +87,21 @@ export default class Player {
   }
 
   addTargetsAround([row, col]) {
-    [[row-1,col],[row+1,col],[row,col-1],[row,col+1]].forEach(([r,c])=>{
-      const key=[r,c].toString();
-      if(r>=0&&r<10&&c>=0&&c<10&&!this.attacksMade.has(key)) this.targetQueue.push([r,c]);
-    });
+    [[row - 1, col], [row + 1, col], [row, col - 1], [row, col + 1]].forEach(
+      ([r, c]) => {
+        const key = [r, c].toString();
+
+        if (
+          r >= 0 &&
+          r < 10 &&
+          c >= 0 &&
+          c < 10 &&
+          !this.attacksMade.has(key) &&
+          !this.targetQueue.some((target) => target.toString() === key)
+        ) {
+          this.targetQueue.push([r, c]);
+        }
+      }
+    );
   }
 }
