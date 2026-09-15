@@ -7,13 +7,13 @@ body {
   margin: 0;
   font-family: sans-serif;
   color: white;
-  background-image: linear-gradient(rgba(0,55,90,.55), rgba(0,25,60,.8)), url("images/background.jpg");
+  background-image: linear-gradient(rgba(0,55,90,.65), rgba(0,25,60,.85)), url("images/background.jpg");
   background-size: cover;
   background-position: center;
 }
 
 h1, h2 {
-  text-shadow: 0 3px 8px rgba(0,0,0,.5);
+  text-shadow: 0 3px 8px rgba(0,0,0,.6);
 }
 
 #start-screen,
@@ -28,8 +28,9 @@ h1, h2 {
 
 #start-screen img {
   width: 350px;
+  max-width: 90vw;
   border-radius: 20px;
-  box-shadow: 0 15px 30px rgba(0,0,0,.4);
+  box-shadow: 0 15px 30px rgba(0,0,0,.5);
 }
 
 button {
@@ -40,6 +41,7 @@ button {
   color: white;
   cursor: pointer;
   transition: .3s;
+  font-size: 1rem;
 }
 
 button:hover {
@@ -51,42 +53,64 @@ button:hover {
   display: flex;
   justify-content: center;
   gap: 50px;
-  padding-top: 50px;
+  padding: 50px;
 }
 
 .board {
   display: grid;
   grid-template-columns: repeat(10, 50px);
   grid-template-rows: repeat(10, 50px);
-  box-shadow: 0 15px 30px rgba(0,0,0,.4);
+  border: 3px solid rgba(255,255,255,.6);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0,0,0,.5);
 }
 
 .cell {
   width: 50px;
   height: 50px;
-  border: 1px solid rgba(255,255,255,.4);
-  background: rgba(0,130,190,.35);
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(0,130,190,.4);
   cursor: pointer;
+  transition: .2s;
 }
 
 .cell:hover {
-  background: rgba(255,255,255,.25);
+  background: rgba(255,255,255,.3);
 }
 
 .ship {
-  background: #8b5a2b;
+  background: #9a6b3f !important;
+  box-shadow: inset 0 0 10px rgba(0,0,0,.35);
 }
 
 .hit {
-  background: #d9534f;
+  background: #c0392b !important;
+  position: relative;
+}
+
+.hit::after {
+  content: "💥";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .miss {
-  background: #bdefff;
+  background: #8fd3ff !important;
+}
+
+.miss::after {
+  content: "💧";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 #winner-modal {
@@ -95,7 +119,7 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,.55);
+  background: rgba(0,0,0,.6);
 }
 
 .modal-content {
@@ -103,5 +127,5 @@ button:hover {
   padding: 40px;
   border-radius: 20px;
   text-align: center;
-  box-shadow: 0 20px 40px rgba(0,0,0,.5);
+  box-shadow: 0 20px 40px rgba(0,0,0,.6);
 }
