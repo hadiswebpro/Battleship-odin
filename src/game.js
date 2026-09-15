@@ -34,7 +34,11 @@ export default class Game {
     if (result !== "already") {
       this.switchTurn();
 
-      if (this.mode === "computer" && this.currentPlayer === this.player2) {
+      if (
+        this.mode === "computer" &&
+        this.currentPlayer === this.player2 &&
+        !this.isGameOver()
+      ) {
         this.player2.computerAttack(this.player1.gameboard);
         this.switchTurn();
       }
