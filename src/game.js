@@ -4,13 +4,19 @@ export default class Game {
   constructor(mode = "computer") {
     this.mode = mode;
 
-    this.player1 = new Player("Player", "green");
+    this.player1 = new Player("Player", "blue", false);
     this.player2 = new Player(
       mode === "computer" ? "Computer" : "Player 2",
-      "red"
+      "blue"
     );
 
     this.currentPlayer = this.player1;
+  }
+
+  startGame() {
+    if (this.player1.gameboard.ships.length === 0) {
+      this.player1.placeShips();
+    }
   }
 
   switchTurn() {
@@ -26,10 +32,7 @@ export default class Game {
 
   playTurn(coordinate) {
     const opponent = this.getOpponent(this.currentPlayer);
-    const result = this.currentPlayer.attack(
-      opponent.gameboard,
-      coordinate
-    );
+    const result = this.currentPlayer.attack(opponent.gameboard, coordinate);
 
     if (result !== "already") {
       this.switchTurn();
@@ -48,16 +51,12 @@ export default class Game {
   }
 
   isGameOver() {
-    return (
-      this.player1.gameboard.allShipsSunk() ||
-      this.player2.gameboard.allShipsSunk()
-    );
+    return this.player1.gameboard.allShipsSunk() || this.player2.gameboard.allShipsSunk();
   }
 
   getWinner() {
     if (this.player2.gameboard.allShipsSunk()) return this.player1;
     if (this.player1.gameboard.allShipsSunk()) return this.player2;
-
     return null;
   }
 }
