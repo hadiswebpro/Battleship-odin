@@ -8,27 +8,52 @@ export default class Player {
     this.color = color;
     this.attacksMade = new Set();
 
-    this.placeDefaultShips();
+    this.placeShips();
   }
 
-  placeDefaultShips() {
-    const ships = [5, 4, 3, 3, 2];
+  placeShips() {
+    const shipLengths = [5, 4, 3, 3, 2];
 
-    ships.forEach((length, index) => {
-      const ship = new Ship(length);
+    shipLengths.forEach((length) => {
+      let placed = false;
 
-      const coordinates = Array.from(
-        { length },
-        (_, position) => [index, position]
-      );
+      while (!placed) {
+        const ship = new Ship(length);
+        const coordinates = this.generateCoordinates(length);
 
-      this.gameboard.placeShip(ship, coordinates);
+        try {
+          this.gameboard.placeShip(ship, coordinates);
+          placed = true;
+        } catch (error) {
+          placed = false;
+        }
+      }
     });
+  }
+
+  generateCoordinates(length) {
+    const horizontal = Math.random() > 0.5;
+    const row = Math.floor(Math.random() * 10);
+    const col = Math.floor(Math.random() * 10);
+
+    const coordinates = [];
+
+    for (let i = 0; i < length; i++) {
+      const newRow = horizontal ? row : row + i;
+      const newCol = horizontal ? col + i : col;
+
+      if (newRow > 9 || newCol > 9) {
+        return this.generateCoordinates(length);
+      }
+
+      coordinates.push([newRow, newCol]);
+    }
+
+    return coordinates;
   }
 
   attack(enemyBoard, coordinate) {
     const key = coordinate.toString();
-
     this.attacksMade.add(key);
 
     return enemyBoard.receiveAttack(coordinate);
