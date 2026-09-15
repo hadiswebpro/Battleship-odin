@@ -1,4 +1,4 @@
-export function createBoard(element, color) {
+export function createBoard(element, color, gameboard = null) {
   element.classList.add("board");
 
   for (let row = 0; row < 10; row++) {
@@ -11,6 +11,10 @@ export function createBoard(element, color) {
       cell.dataset.col = col;
 
       cell.style.backgroundColor = color;
+
+      if (gameboard && gameboard.getShipAt([row, col])) {
+        cell.classList.add("ship");
+      }
 
       element.appendChild(cell);
     }
