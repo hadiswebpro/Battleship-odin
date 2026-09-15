@@ -19,10 +19,8 @@ export function createBoard(
   }
 
 
-
   const board = document.createElement("div");
   board.classList.add("board");
-
 
 
   for (let row = 0; row < 10; row++) {
@@ -38,12 +36,26 @@ export function createBoard(
       cell.dataset.col = col;
 
 
+      const attackResult =
+        gameboard?.getAttackResult([row, col]);
 
-      const ship = gameboard?.getShipAt([row,col]);
+
+      if (attackResult === "hit") {
+        cell.classList.add("hit");
+      }
+
+
+      if (attackResult === "miss") {
+        cell.classList.add("miss");
+      }
 
 
 
-      if(ship && !hideShips){
+      const ship =
+        gameboard?.getShipAt([row, col]);
+
+
+      if (ship && !hideShips) {
 
         cell.classList.add("ship");
 
@@ -68,15 +80,11 @@ export function createBoard(
 
 }
 
-
-
-
-
 export function createPlacementBoard(
   element,
   player,
   onComplete
-){
+) {
 
 
   let currentShipIndex = 0;
@@ -262,6 +270,7 @@ export function createPlacementBoard(
 
 
 
+
   function previewShip(cell){
 
 
@@ -290,6 +299,7 @@ export function createPlacementBoard(
       );
 
 
+
       if(target){
 
         target.classList.add(
@@ -303,6 +313,7 @@ export function createPlacementBoard(
     });
 
   }
+
 
 
 
@@ -327,6 +338,7 @@ export function createPlacementBoard(
 
 
   }
+
 
 
 
@@ -408,6 +420,8 @@ export function createPlacementBoard(
 
 
 
+
+
     }
     catch(error){
 
@@ -420,12 +434,6 @@ export function createPlacementBoard(
 
 
 }
-
-
-
-
-
-
 
 export function showWinnerModal(game){
 
@@ -459,6 +467,8 @@ export function showWinnerModal(game){
 
 
 
+
+
 export function addAttackListener(
   boardElement,
   game,
@@ -477,13 +487,16 @@ export function addAttackListener(
         return;
 
 
+
       const coordinate = [
         Number(cell.dataset.row),
         Number(cell.dataset.col)
       ];
 
 
-      const result = game.playTurn(coordinate);
+
+      const result =
+        game.playTurn(coordinate);
 
 
 
@@ -492,7 +505,7 @@ export function addAttackListener(
 
 
 
-      // نمایش تیر بازیکن روی برد دشمن
+      // نمایش نتیجه حمله بازیکن روی برد دشمن
       cell.classList.add(
         result === "hit"
           ? "hit"
@@ -501,7 +514,8 @@ export function addAttackListener(
 
 
 
-      // حمله کامپیوتر
+
+      // اجرای حمله کامپیوتر
       if (
         game.mode === "computer" &&
         !game.isGameOver()
@@ -524,6 +538,8 @@ export function addAttackListener(
 
 
 
+
+
       if (game.isGameOver())
         onGameOver();
 
@@ -532,3 +548,4 @@ export function addAttackListener(
   );
 
 }
+

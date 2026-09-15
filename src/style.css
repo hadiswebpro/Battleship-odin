@@ -11,28 +11,36 @@
   --text: #ffffff;
 }
 
+
 body {
-  min-height: 100vh;
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  color: var(--text);
+
+  min-height:100vh;
+  margin:0;
+
+  font-family:"Segoe UI", sans-serif;
+
+  color:var(--text);
 
   background:
-    linear-gradient(
-      rgba(0,30,60,.45),
-      rgba(0,20,50,.65)
-    ),
-    url("./images/background.webp");
+  linear-gradient(
+    rgba(0,30,60,.45),
+    rgba(0,20,50,.65)
+  ),
+  url("./images/background.webp");
 
-  background-size: cover;
-  background-position: center;
-  overflow-x: hidden;
+  background-size:cover;
+  background-position:center;
+
+  overflow-x:hidden;
+
 }
 
 
+
 /* =====================
-   GENERAL SCREENS
+GENERAL SCREENS
 ===================== */
+
 
 .screen,
 .main-menu,
@@ -40,55 +48,69 @@ body {
 .placement-screen,
 .game-screen {
 
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 30px;
+  min-height:100vh;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  padding:30px;
+
 }
+
 
 
 .card {
 
-  background: rgba(0,40,80,.65);
-  backdrop-filter: blur(10px);
+  background:rgba(0,40,80,.65);
 
-  border: 1px solid var(--border);
-  border-radius: 20px;
+  backdrop-filter:blur(10px);
 
-  padding: 35px;
+  border:
+  1px solid var(--border);
+
+  border-radius:20px;
+
+  padding:35px;
 
   box-shadow:
-    0 10px 30px rgba(0,0,0,.3);
+  0 10px 30px rgba(0,0,0,.3);
 
 }
 
 
+
 /* =====================
-   MAIN MENU
+MAIN MENU
 ===================== */
 
 
 .main-menu-card {
 
-  text-align: center;
-  width: min(450px,90%);
+  text-align:center;
+
+  width:min(450px,90%);
 
 }
 
 
 .game-title {
 
-  font-size: 48px;
-  margin-bottom: 10px;
+  font-size:48px;
+
+  margin-bottom:10px;
 
 }
 
 
+
 .subtitle {
 
-  opacity: .8;
-  margin-bottom: 30px;
+  opacity:.8;
+
+  margin-bottom:30px;
 
 }
 
@@ -96,13 +118,13 @@ body {
 
 .primary-btn {
 
-  border: none;
+  border:none;
 
-  padding: 14px 35px;
+  padding:14px 35px;
 
-  border-radius: 14px;
+  border-radius:14px;
 
-  background: #00b4d8;
+  background:#00b4d8;
 
   color:white;
 
@@ -117,7 +139,7 @@ body {
 
 .primary-btn:hover {
 
-  transform: translateY(-3px);
+  transform:translateY(-3px);
 
   background:#48cae4;
 
@@ -126,7 +148,7 @@ body {
 
 
 /* =====================
- PLAYER SELECT
+PLAYER SELECT
 ===================== */
 
 
@@ -178,10 +200,8 @@ body {
 
 }
 
-
-
 /* =====================
- PLACEMENT SCREEN
+PLACEMENT SCREEN
 ===================== */
 
 
@@ -226,6 +246,7 @@ body {
 }
 
 
+
 .ship-option:hover,
 .ship-option.active {
 
@@ -236,7 +257,7 @@ body {
 
 
 /* =====================
- GAME BOARD
+GAME BOARD
 ===================== */
 
 
@@ -324,8 +345,7 @@ body {
 
 
 
-.cell:hover,
-.preview {
+.cell:hover {
 
   background:rgba(255,255,255,.3);
 
@@ -333,17 +353,37 @@ body {
 
 
 
-.invalid-preview {
+/* =====================
+PLACEMENT PREVIEW
+===================== */
 
-  background:rgba(255,0,0,.35);
+
+.preview {
+
+  background:rgba(0,255,170,.35)!important;
 
 }
 
 
 
+.invalid-preview {
+
+  background:rgba(255,0,0,.35)!important;
+
+}
+
+
+
+
+
+/* =====================
+SHIPS
+===================== */
+
+
 .ship {
 
-  background:transparent;
+  background:rgba(0,180,216,.25);
 
 }
 
@@ -362,14 +402,14 @@ body {
 
 
 /* =====================
- ATTACK
+ATTACK RESULT
 ===================== */
 
 
-.hit,
-.miss {
+.hit {
 
-  background:var(--water)!important;
+  background:
+  rgba(255,70,70,.45)!important;
 
 }
 
@@ -379,6 +419,17 @@ body {
 
   content:"💥";
 
+  font-size:20px;
+
+}
+
+
+
+.miss {
+
+  background:
+  rgba(255,255,255,.25)!important;
+
 }
 
 
@@ -387,18 +438,17 @@ body {
 
   content:"💧";
 
+  font-size:20px;
+
 }
 
-
-
 /* =====================
- BUTTONS
+BUTTONS
 ===================== */
 
 
 .rotate-ship,
 .confirm-placement {
-
 
   margin-top:15px;
 
@@ -444,7 +494,7 @@ body {
 
 
 /* =====================
- MODAL
+WINNER MODAL
 ===================== */
 
 
@@ -489,43 +539,48 @@ body {
 
 
 /* =====================
- MOBILE
+MOBILE
 ===================== */
 
 
 @media(max-width:700px){
 
 
-.board {
+  .board {
 
-  grid-template-columns:repeat(10,30px);
+    grid-template-columns:
+    repeat(10,30px);
 
-  grid-template-rows:repeat(10,30px);
+    grid-template-rows:
+    repeat(10,30px);
 
-}
-
-
-.cell {
-
-  width:30px;
-
-  height:30px;
-
-}
+  }
 
 
-#game {
 
-  gap:20px;
+  .cell {
 
-}
+    width:30px;
+
+    height:30px;
+
+  }
 
 
-.game-title {
 
-  font-size:36px;
+  #game {
 
-}
+    gap:20px;
+
+  }
+
+
+
+  .game-title {
+
+    font-size:36px;
+
+  }
 
 
 }
