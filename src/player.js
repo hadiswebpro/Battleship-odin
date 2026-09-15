@@ -5,32 +5,32 @@ export default class Player {
     this.gameboard = new Gameboard();
     this.name = name;
     this.color = color;
-    this.attacksMade = [];
-
+    this.attacksMade = new Set();
   }
 
   attack(enemyBoard, coordinate) {
+    const key = coordinate.toString();
+
+    this.attacksMade.add(key);
 
     return enemyBoard.receiveAttack(coordinate);
-
-}
+  }
 
   computerAttack(enemyBoard) {
     let coordinate;
+    let key;
 
     do {
       coordinate = [
-        Math.floor(Math.random() * 8),
-        Math.floor(Math.random() * 8),
+        Math.floor(Math.random() * 10),
+        Math.floor(Math.random() * 10),
       ];
-    } while (
-      this.attacksMade.some(
-        (attack) => attack[0] === coordinate[0] && attack[1] === coordinate[1],
-      )
-    );
 
-    this.attacksMade.push(coordinate);
+      key = coordinate.toString();
+    } while (this.attacksMade.has(key));
 
-    enemyBoard.receiveAttack(coordinate);
+    this.attacksMade.add(key);
+
+    return enemyBoard.receiveAttack(coordinate);
   }
 }
