@@ -31,8 +31,8 @@ function start(mode = selectedMode) {
   winnerModal.classList.add("hidden");
   gameScreen.classList.remove("hidden");
 
-  createBoard(playerBoard, game.player1.gameboard);
-  createBoard(enemyBoard);
+  createBoard(playerBoard, game.player1.gameboard, game.player1.name);
+  createBoard(enemyBoard, null, game.player2.name);
 
   addAttackListener(enemyBoard, game, () => {
     showWinnerModal(game);
