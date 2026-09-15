@@ -5,7 +5,6 @@ export default class Game {
     this.mode = mode;
 
     this.player1 = new Player("Player", "green");
-
     this.player2 = new Player(
       mode === "computer" ? "Computer" : "Player 2",
       "red"
@@ -34,6 +33,11 @@ export default class Game {
 
     if (result !== "already") {
       this.switchTurn();
+
+      if (this.mode === "computer" && this.currentPlayer === this.player2) {
+        this.player2.computerAttack(this.player1.gameboard);
+        this.switchTurn();
+      }
     }
 
     return result;
