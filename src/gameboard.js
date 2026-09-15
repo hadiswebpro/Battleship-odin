@@ -4,6 +4,7 @@ export default class Gameboard {
         this.ships = [];
         this.missedAttacks = [];
         this.board = new Map();
+        this.attackedCoordinates = [];
     }
 
     placeShip(ship, coordinates) {
@@ -19,6 +20,12 @@ export default class Gameboard {
 
     const key = coordinate.toString();
 
+    if(this.attackedCoordinates.includes(key)){
+
+        return "already";
+
+    }
+    
     const ship = this.board.get(key);
 
 

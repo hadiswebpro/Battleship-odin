@@ -1,5 +1,4 @@
 import Game from "./game";
-import {createBoard} from "./dom";
 
 import {
     createBoard,
@@ -28,11 +27,6 @@ createBoard(
 createBoard(
     enemyBoard,
     "red"
-);
-
-createBoard(
-    playerBoard,
-    "green"
 );
 
 
