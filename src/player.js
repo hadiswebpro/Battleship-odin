@@ -19,10 +19,7 @@ export default class Player {
 
       while (!placed) {
         try {
-          this.gameboard.placeShip(
-            new Ship(length),
-            this.generateCoordinates(length)
-          );
+          this.placeShip(length, this.generateCoordinates(length));
           placed = true;
         } catch (error) {}
       }
@@ -49,6 +46,10 @@ export default class Player {
     }
 
     return coordinates;
+  }
+
+  clearBoard() {
+    this.gameboard = new Gameboard();
   }
 
   attack(enemyBoard, coordinate) {
