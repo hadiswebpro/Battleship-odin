@@ -25,6 +25,10 @@ export default class Gameboard {
         this.ships.push(ship);
     }
 
+    getShipAt(coordinate) {
+        return this.board.get(coordinate.toString());
+    }
+
     receiveAttack(coordinate) {
         const key = coordinate.toString();
 
