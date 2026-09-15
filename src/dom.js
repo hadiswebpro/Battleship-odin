@@ -1,4 +1,5 @@
 export function createBoard(element, color, gameboard = null) {
+  element.innerHTML = "";
   element.classList.add("board");
 
   for (let row = 0; row < 10; row++) {
@@ -29,14 +30,18 @@ export function addAttackListener(boardElement, game) {
       return;
     }
 
-    const row = Number(cell.dataset.row);
-    const col = Number(cell.dataset.col);
+    const coordinate = [
+      Number(cell.dataset.row),
+      Number(cell.dataset.col),
+    ];
 
-    const result = game.playTurn([row, col]);
+    const result = game.playTurn(coordinate);
 
     if (result === "already") {
       return;
     }
+
+    cell.classList.remove("ship");
 
     if (result === "hit") {
       cell.classList.add("hit");
