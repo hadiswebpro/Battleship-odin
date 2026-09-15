@@ -1,4 +1,5 @@
 import Gameboard from "./gameboard";
+import Ship from "./ship";
 
 export default class Player {
   constructor(name, color) {
@@ -6,6 +7,23 @@ export default class Player {
     this.name = name;
     this.color = color;
     this.attacksMade = new Set();
+
+    this.placeDefaultShips();
+  }
+
+  placeDefaultShips() {
+    const ships = [5, 4, 3, 3, 2];
+
+    ships.forEach((length, index) => {
+      const ship = new Ship(length);
+
+      const coordinates = Array.from(
+        { length },
+        (_, position) => [index, position]
+      );
+
+      this.gameboard.placeShip(ship, coordinates);
+    });
   }
 
   attack(enemyBoard, coordinate) {
