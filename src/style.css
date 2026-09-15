@@ -2,111 +2,530 @@
   box-sizing: border-box;
 }
 
+:root {
+  --ocean-dark: #003049;
+  --ocean: #0077b6;
+  --water: rgba(0, 120, 180, .35);
+  --glass: rgba(255, 255, 255, .12);
+  --border: rgba(255, 255, 255, .25);
+  --text: #ffffff;
+}
+
 body {
   min-height: 100vh;
   margin: 0;
-  font-family: sans-serif;
-  color: white;
-  background: linear-gradient(rgba(0,30,60,.35), rgba(0,20,50,.55)), url("./images/background.webp");
+  font-family: "Segoe UI", sans-serif;
+  color: var(--text);
+
+  background:
+    linear-gradient(
+      rgba(0,30,60,.45),
+      rgba(0,20,50,.65)
+    ),
+    url("./images/background.webp");
+
   background-size: cover;
   background-position: center;
+  overflow-x: hidden;
 }
 
-#game {
+
+/* =====================
+   GENERAL SCREENS
+===================== */
+
+.screen,
+.main-menu,
+.player-selection,
+.placement-screen,
+.game-screen {
+
+  min-height: 100vh;
   display: flex;
   justify-content: center;
-  gap: 40px;
+  align-items: center;
   padding: 30px;
 }
 
-.board-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+
+.card {
+
+  background: rgba(0,40,80,.65);
+  backdrop-filter: blur(10px);
+
+  border: 1px solid var(--border);
+  border-radius: 20px;
+
+  padding: 35px;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.3);
+
 }
+
+
+/* =====================
+   MAIN MENU
+===================== */
+
+
+.main-menu-card {
+
+  text-align: center;
+  width: min(450px,90%);
+
+}
+
+
+.game-title {
+
+  font-size: 48px;
+  margin-bottom: 10px;
+
+}
+
+
+.subtitle {
+
+  opacity: .8;
+  margin-bottom: 30px;
+
+}
+
+
+
+.primary-btn {
+
+  border: none;
+
+  padding: 14px 35px;
+
+  border-radius: 14px;
+
+  background: #00b4d8;
+
+  color:white;
+
+  font-size:18px;
+
+  cursor:pointer;
+
+  transition:.3s;
+
+}
+
+
+.primary-btn:hover {
+
+  transform: translateY(-3px);
+
+  background:#48cae4;
+
+}
+
+
+
+/* =====================
+ PLAYER SELECT
+===================== */
+
+
+.player-selection {
+
+  flex-direction:column;
+
+}
+
+
+
+.players-container {
+
+  display:flex;
+
+  gap:25px;
+
+  flex-wrap:wrap;
+
+  justify-content:center;
+
+}
+
+
+
+.player-card {
+
+  width:250px;
+
+  text-align:center;
+
+}
+
+
+
+.player-card input {
+
+  width:100%;
+
+  padding:12px;
+
+  margin-top:15px;
+
+  border-radius:10px;
+
+  border:none;
+
+  outline:none;
+
+}
+
+
+
+/* =====================
+ PLACEMENT SCREEN
+===================== */
+
+
+.placement-screen {
+
+  flex-direction:column;
+
+}
+
+
+
+.ship-selector {
+
+  display:flex;
+
+  gap:15px;
+
+  margin-bottom:25px;
+
+  flex-wrap:wrap;
+
+  justify-content:center;
+
+}
+
+
+
+.ship-option {
+
+  padding:12px 18px;
+
+  background:var(--glass);
+
+  border:1px solid var(--border);
+
+  border-radius:12px;
+
+  cursor:pointer;
+
+  transition:.3s;
+
+}
+
+
+.ship-option:hover,
+.ship-option.active {
+
+  background:#00b4d8;
+
+}
+
+
+
+/* =====================
+ GAME BOARD
+===================== */
+
+
+#game {
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  gap:40px;
+
+  padding:30px;
+
+  flex-wrap:wrap;
+
+}
+
+
+
+.board-wrapper {
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+}
+
+
 
 .board-title {
-  margin-bottom: 15px;
+
+  margin-bottom:15px;
+
+  font-size:25px;
+
 }
+
+
 
 .board {
-  display: grid;
-  grid-template-columns: repeat(10, 38px);
-  grid-template-rows: repeat(10, 38px);
-  border: 2px solid rgba(255,255,255,.45);
-  border-radius: 14px;
-  overflow: hidden;
-  background: rgba(0,100,170,.25);
+
+  display:grid;
+
+  grid-template-columns:repeat(10,38px);
+
+  grid-template-rows:repeat(10,38px);
+
+  border:2px solid rgba(255,255,255,.45);
+
+  border-radius:14px;
+
+  overflow:hidden;
+
+  background:rgba(0,100,170,.25);
+
 }
 
+
+
 .cell {
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(0,120,180,.35);
-  cursor: pointer;
+
+  width:38px;
+
+  height:38px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border:1px solid rgba(255,255,255,.18);
+
+  background:var(--water);
+
+  cursor:pointer;
+
+  transition:.2s;
+
 }
+
+
 
 .cell:hover,
 .preview {
-  background: rgba(255,255,255,.25);
+
+  background:rgba(255,255,255,.3);
+
 }
+
+
+
+.invalid-preview {
+
+  background:rgba(255,0,0,.35);
+
+}
+
+
 
 .ship {
-  background: rgba(0,120,180,.35);
-  font-size: 22px;
+
+  background:transparent;
+
 }
 
+
+
 .ship img {
-  width: 90%;
-  height: 90%;
-  object-fit: contain;
+
+  width:90%;
+
+  height:90%;
+
+  object-fit:contain;
+
 }
+
+
+
+/* =====================
+ ATTACK
+===================== */
+
 
 .hit,
 .miss {
-  background: rgba(0,120,180,.35) !important;
+
+  background:var(--water)!important;
+
 }
+
+
 
 .hit::after {
-  content: "💥";
+
+  content:"💥";
+
 }
 
+
+
 .miss::after {
-  content: "💧";
+
+  content:"💧";
+
 }
+
+
+
+/* =====================
+ BUTTONS
+===================== */
+
 
 .rotate-ship,
 .confirm-placement {
-  margin-top: 15px;
-  padding: 10px 18px;
-  border-radius: 10px;
-  cursor: pointer;
+
+
+  margin-top:15px;
+
+  padding:12px 22px;
+
+  border-radius:12px;
+
+  border:none;
+
+  cursor:pointer;
+
+  background:#0096c7;
+
+  color:white;
+
+  font-size:16px;
+
+  transition:.3s;
+
 }
 
-.placement-complete {
-  opacity: .5;
-  pointer-events: none;
+
+
+.rotate-ship:hover,
+.confirm-placement:hover {
+
+  background:#48cae4;
+
+  transform:translateY(-2px);
+
 }
+
+
+
+.confirm-placement:disabled {
+
+  opacity:.5;
+
+  cursor:not-allowed;
+
+}
+
+
+
+/* =====================
+ MODAL
+===================== */
+
 
 .hidden {
-  display: none !important;
+
+  display:none!important;
+
 }
+
+
 
 #winner-modal {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,.55);
+
+  position:fixed;
+
+  inset:0;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  background:rgba(0,0,0,.55);
+
 }
 
+
+
 .modal-content {
-  background: rgba(0,80,130,.9);
-  padding: 40px;
-  border-radius: 20px;
+
+  background:rgba(0,80,130,.9);
+
+  padding:40px;
+
+  border-radius:20px;
+
+  text-align:center;
+
+}
+
+
+
+/* =====================
+ MOBILE
+===================== */
+
+
+@media(max-width:700px){
+
+
+.board {
+
+  grid-template-columns:repeat(10,30px);
+
+  grid-template-rows:repeat(10,30px);
+
+}
+
+
+.cell {
+
+  width:30px;
+
+  height:30px;
+
+}
+
+
+#game {
+
+  gap:20px;
+
+}
+
+
+.game-title {
+
+  font-size:36px;
+
+}
+
+
 }

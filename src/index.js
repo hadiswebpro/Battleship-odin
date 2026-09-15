@@ -1,4 +1,5 @@
 import Game from "./game";
+import "./style.css";
 
 import {
   createBoard,
@@ -7,48 +8,309 @@ import {
   showWinnerModal
 } from "./dom";
 
+
+
 let game;
 let selectedMode = "computer";
 
-const startScreen = document.querySelector("#start-screen");
-const modeScreen = document.querySelector("#mode-screen");
-const gameScreen = document.querySelector("#game");
-const winnerModal = document.querySelector("#winner-modal");
 
-const startButton = document.querySelector("#start-game");
-const playerModeButton = document.querySelector("#player-mode");
-const computerModeButton = document.querySelector("#computer-mode");
-const restartButton = document.querySelector("#restart-game");
 
-const playerBoard = document.querySelector("#player-board");
-const enemyBoard = document.querySelector("#enemy-board");
+// ======================
+// SCREENS
+// ======================
 
-function start(mode = selectedMode) {
+const startScreen =
+  document.querySelector("#start-screen");
+
+const modeScreen =
+  document.querySelector("#mode-screen");
+
+const placementScreen =
+  document.querySelector("#placement-screen");
+
+const gameScreen =
+  document.querySelector("#game");
+
+const winnerModal =
+  document.querySelector("#winner-modal");
+
+
+
+// ======================
+// BUTTONS
+// ======================
+
+const startButton =
+  document.querySelector("#start-game");
+
+
+const playerModeButton =
+  document.querySelector("#player-mode");
+
+
+const computerModeButton =
+  document.querySelector("#computer-mode");
+
+
+const restartButton =
+  document.querySelector("#restart-game");
+
+
+
+// ======================
+// BOARDS
+// ======================
+
+
+const placementBoard =
+  document.querySelector("#placement-board");
+
+
+const playerBoard =
+  document.querySelector("#player-board");
+
+
+const enemyBoard =
+  document.querySelector("#enemy-board");
+
+
+
+
+// ======================
+// START SCREEN
+// ======================
+
+
+startButton.addEventListener(
+  "click",
+  ()=>{
+
+    startScreen.classList.add("hidden");
+
+    modeScreen.classList.remove("hidden");
+
+  }
+);
+
+
+
+
+// ======================
+// SELECT MODE
+// ======================
+
+
+computerModeButton.addEventListener(
+  "click",
+  ()=>{
+
+    start("computer");
+
+  }
+);
+
+
+
+playerModeButton.addEventListener(
+  "click",
+  ()=>{
+
+    start("player");
+
+  }
+);
+
+
+
+
+
+
+// ======================
+// CREATE GAME
+// ======================
+
+
+function start(mode){
+
+
   selectedMode = mode;
+
+
   game = new Game(mode);
 
-  startScreen.classList.add("hidden");
+
+
   modeScreen.classList.add("hidden");
-  winnerModal.classList.add("hidden");
-  gameScreen.classList.remove("hidden");
 
-  createPlacementBoard(playerBoard, game.player1, () => {
-    game.player2.placeShips();
 
-    createBoard(playerBoard, game.player1.gameboard, game.player1.name);
-    createBoard(enemyBoard, null, game.player2.name);
+  placementScreen.classList.remove("hidden");
 
-    addAttackListener(enemyBoard, game, () => {
-      showWinnerModal(game);
-    });
-  });
+
+
+  createPlacementBoard(
+
+    placementBoard,
+
+    game.player1,
+
+    ()=>{
+
+      console.log(
+        "Player fleet ready"
+      );
+
+    }
+
+  );
+
+
 }
 
-startButton.addEventListener("click", () => {
-  startScreen.classList.add("hidden");
-  modeScreen.classList.remove("hidden");
-});
 
-computerModeButton.addEventListener("click", () => start("computer"));
-playerModeButton.addEventListener("click", () => start("player"));
-restartButton.addEventListener("click", () => start(selectedMode));
+
+
+
+
+
+// ======================
+// START BATTLE
+// ======================
+
+
+// چون confirm button داخل dom ساخته می‌شود
+// بعد از کامل شدن placement پیدا می‌کنیم
+
+
+document.addEventListener(
+  "click",
+  event=>{
+
+
+    if(
+      event.target.classList.contains(
+        "confirm-placement"
+      )
+    ){
+
+
+      placementScreen.classList.add(
+        "hidden"
+      );
+
+
+      gameScreen.classList.remove(
+        "hidden"
+      );
+
+
+
+      // computer ships
+
+      game.player2.placeShips();
+
+
+
+
+      // player board
+
+      createBoard(
+
+        playerBoard,
+
+        game.player1.gameboard,
+
+        game.player1.name
+
+      );
+
+
+
+
+
+      // enemy hidden
+
+      createBoard(
+
+        enemyBoard,
+
+        game.player2.gameboard,
+
+        game.player2.name,
+
+        true
+
+      );
+
+
+
+
+
+
+      addAttackListener(
+
+        enemyBoard,
+
+        game,
+
+        ()=>{
+
+          showWinnerModal(game);
+
+        }
+
+      );
+
+
+    }
+
+
+  }
+
+);
+
+
+
+
+
+
+
+// ======================
+// RESTART
+// ======================
+
+
+restartButton.addEventListener(
+  "click",
+  ()=>{
+
+
+    winnerModal.classList.add(
+      "hidden"
+    );
+
+
+    gameScreen.classList.add(
+      "hidden"
+    );
+
+
+
+    placementScreen.classList.add(
+      "hidden"
+    );
+
+
+
+    modeScreen.classList.add(
+      "hidden"
+    );
+
+
+
+    startScreen.classList.remove(
+      "hidden"
+    );
+
+
+  }
+);
