@@ -7,10 +7,8 @@ export function createBoard(element, color, gameboard = null) {
       const cell = document.createElement("div");
 
       cell.classList.add("cell");
-
       cell.dataset.row = row;
       cell.dataset.col = col;
-
       cell.style.backgroundColor = color;
 
       if (gameboard && gameboard.getShipAt([row, col])) {
@@ -22,13 +20,21 @@ export function createBoard(element, color, gameboard = null) {
   }
 }
 
-export function addAttackListener(boardElement, game) {
+export function showWinnerModal(game) {
+  const modal = document.querySelector("#winner-modal");
+  const text = document.querySelector("#winner-text");
+
+  const winner = game.getWinner();
+
+  text.textContent = `${winner.name} wins! 🚢`;
+  modal.classList.remove("hidden");
+}
+
+export function addAttackListener(boardElement, game, onGameOver) {
   boardElement.addEventListener("click", (event) => {
     const cell = event.target;
 
-    if (!cell.classList.contains("cell")) {
-      return;
-    }
+    if (!cell.classList.contains("cell")) return;
 
     const coordinate = [
       Number(cell.dataset.row),
@@ -37,16 +43,16 @@ export function addAttackListener(boardElement, game) {
 
     const result = game.playTurn(coordinate);
 
-    if (result === "already") {
-      return;
-    }
-
-    cell.classList.remove("ship");
+    if (result === "already") return;
 
     if (result === "hit") {
       cell.classList.add("hit");
     } else {
       cell.classList.add("miss");
+    }
+
+    if (game.isGameOver()) {
+      onGameOver();
     }
   });
 }
