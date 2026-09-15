@@ -7,9 +7,13 @@ body {
   margin: 0;
   font-family: sans-serif;
   color: white;
-  background-image: linear-gradient(rgba(0,40,80,.6), rgba(0,40,80,.8)), url("images/background.jpg");
+  background-image: linear-gradient(rgba(0,55,90,.55), rgba(0,25,60,.8)), url("images/background.jpg");
   background-size: cover;
   background-position: center;
+}
+
+h1, h2 {
+  text-shadow: 0 3px 8px rgba(0,0,0,.5);
 }
 
 #start-screen,
@@ -25,15 +29,22 @@ body {
 #start-screen img {
   width: 350px;
   border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0,0,0,.4);
 }
 
 button {
   padding: 12px 30px;
   border: none;
   border-radius: 12px;
-  background: #0b6fa4;
+  background: #087ea4;
   color: white;
   cursor: pointer;
+  transition: .3s;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  background: #0aa6c8;
 }
 
 #game {
@@ -47,25 +58,31 @@ button {
   display: grid;
   grid-template-columns: repeat(10, 50px);
   grid-template-rows: repeat(10, 50px);
+  box-shadow: 0 15px 30px rgba(0,0,0,.4);
 }
 
 .cell {
   width: 50px;
   height: 50px;
-  border: 1px solid white;
-  background: rgba(255,255,255,.2);
+  border: 1px solid rgba(255,255,255,.4);
+  background: rgba(0,130,190,.35);
+  cursor: pointer;
+}
+
+.cell:hover {
+  background: rgba(255,255,255,.25);
 }
 
 .ship {
-  background: #7b4b2a;
+  background: #8b5a2b;
 }
 
 .hit {
-  background: black;
+  background: #d9534f;
 }
 
 .miss {
-  background: lightblue;
+  background: #bdefff;
 }
 
 .hidden {
@@ -78,11 +95,13 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,.5);
+  background: rgba(0,0,0,.55);
 }
 
 .modal-content {
-  background: #064b70;
+  background: #075985;
   padding: 40px;
   border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,.5);
 }
