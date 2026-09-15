@@ -1,8 +1,8 @@
 export function createBoard(element, color) {
   element.classList.add("board");
 
-  for (let row = 0; row < 8; row++) {
-    for (let col = 0; col < 8; col++) {
+  for (let row = 0; row < 10; row++) {
+    for (let col = 0; col < 10; col++) {
       const cell = document.createElement("div");
 
       cell.classList.add("cell");
@@ -21,10 +21,14 @@ export function addAttackListener(boardElement, game) {
   boardElement.addEventListener("click", (event) => {
     const cell = event.target;
 
+    if (!cell.classList.contains("cell")) {
+      return;
+    }
+
     const row = Number(cell.dataset.row);
     const col = Number(cell.dataset.col);
 
-    const result = game.player1.attack(game.player2.gameboard, [row, col]);
+    const result = game.playTurn([row, col]);
 
     if (result === "already") {
       return;
