@@ -1,6 +1,16 @@
-export function createBoard(element, gameboard = null) {
+export function createBoard(element, gameboard = null, playerName = "") {
   element.innerHTML = "";
-  element.classList.add("board");
+  element.classList.add("board-wrapper");
+
+  if (playerName) {
+    const title = document.createElement("h2");
+    title.classList.add("board-title");
+    title.textContent = playerName;
+    element.appendChild(title);
+  }
+
+  const board = document.createElement("div");
+  board.classList.add("board");
 
   for (let row = 0; row < 10; row++) {
     for (let col = 0; col < 10; col++) {
@@ -15,9 +25,11 @@ export function createBoard(element, gameboard = null) {
         cell.textContent = "🚢";
       }
 
-      element.appendChild(cell);
+      board.appendChild(cell);
     }
   }
+
+  element.appendChild(board);
 }
 
 export function showWinnerModal(game) {
@@ -45,11 +57,7 @@ export function addAttackListener(boardElement, game, onGameOver) {
 
     if (result === "already") return;
 
-    if (result === "hit") {
-      cell.classList.add("hit");
-    } else {
-      cell.classList.add("miss");
-    }
+    cell.classList.add(result === "hit" ? "hit" : "miss");
 
     if (game.isGameOver()) {
       onGameOver();
