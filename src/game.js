@@ -2,26 +2,34 @@ import Player from "./player";
 
 export default class Game {
   constructor() {
-    this.player1 = new Player(
-    "Player 1",
-    "green"
-);
-
-
-this.player2 = new Player(
-    "Player 2",
-    "red"
-);
-
+    this.player1 = new Player("Player 1", "green");
+    this.player2 = new Player("Player 2", "red");
     this.currentPlayer = this.player1;
   }
 
   switchTurn() {
-    if (this.currentPlayer === this.player1) {
-      this.currentPlayer = this.player2;
-    } else {
-      this.currentPlayer = this.player1;
+    this.currentPlayer =
+      this.currentPlayer === this.player1
+        ? this.player2
+        : this.player1;
+  }
+
+  getOpponent(player) {
+    return player === this.player1 ? this.player2 : this.player1;
+  }
+
+  playTurn(coordinate) {
+    const opponent = this.getOpponent(this.currentPlayer);
+    const result = this.currentPlayer.attack(
+      opponent.gameboard,
+      coordinate
+    );
+
+    if (result !== "already") {
+      this.switchTurn();
     }
+
+    return result;
   }
 
   isGameOver() {
@@ -32,17 +40,14 @@ this.player2 = new Player(
   }
 
   getWinner() {
-
     if (this.player2.gameboard.allShipsSunk()) {
-        return this.player1;
+      return this.player1;
     }
-
 
     if (this.player1.gameboard.allShipsSunk()) {
-        return this.player2;
+      return this.player2;
     }
 
-
     return null;
-}
+  }
 }
