@@ -1,22 +1,43 @@
 <body>
 
+  <section id="start-screen">
     <h1>Battleship</h1>
 
+    <img src="images/ship.jpg" alt="Battleship ship">
 
-    <div id="game">
-
-        <div>
-            <h2>Player 1 🟢</h2>
-            <div id="player-board"></div>
-        </div>
+    <button id="start-game">Start Game</button>
+  </section>
 
 
-        <div>
-            <h2>Player 2 🔴</h2>
-            <div id="enemy-board"></div>
-        </div>
+  <section id="mode-screen" class="hidden">
+    <h2>Choose opponent</h2>
 
+    <button id="player-mode">Player vs Player</button>
+    <button id="computer-mode">Player vs Computer</button>
+  </section>
+
+
+  <main id="game" class="hidden">
+
+    <div>
+      <h2>Player 🟢</h2>
+      <div id="player-board"></div>
     </div>
 
+
+    <div>
+      <h2>Enemy 🔴</h2>
+      <div id="enemy-board"></div>
+    </div>
+
+  </main>
+
+
+  <div id="winner-modal" class="hidden">
+    <div class="modal-content">
+      <h2 id="winner-text"></h2>
+      <button id="restart-game">Play Again</button>
+    </div>
+  </div>
 
 </body>
