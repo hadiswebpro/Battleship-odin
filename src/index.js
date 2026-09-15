@@ -26,6 +26,9 @@ function start(mode = selectedMode) {
   selectedMode = mode;
   game = new Game(mode);
 
+  // Random placement for both players before battle
+  game.startGame();
+
   startScreen.classList.add("hidden");
   modeScreen.classList.add("hidden");
   winnerModal.classList.add("hidden");
