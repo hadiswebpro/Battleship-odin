@@ -7,6 +7,7 @@ export default class Player {
     this.name = name;
     this.color = color;
     this.attacksMade = new Set();
+    this.targetQueue = [];
 
     this.placeShips();
   }
@@ -64,16 +65,45 @@ export default class Player {
     let key;
 
     do {
-      coordinate = [
-        Math.floor(Math.random() * 10),
-        Math.floor(Math.random() * 10),
-      ];
+      if (this.targetQueue.length > 0) {
+        coordinate = this.targetQueue.shift();
+      } else {
+        coordinate = [
+          Math.floor(Math.random() * 10),
+          Math.floor(Math.random() * 10),
+        ];
+      }
 
       key = coordinate.toString();
     } while (this.attacksMade.has(key));
 
     this.attacksMade.add(key);
 
-    return enemyBoard.receiveAttack(coordinate);
+    const result = enemyBoard.receiveAttack(coordinate);
+
+    if (result === "hit") {
+      this.addTargetsAround(coordinate);
+    }
+
+    return result;
+  }
+
+  addTargetsAround([row, col]) {
+    const targets = [
+      [row - 1, col],
+      [row + 1, col],
+      [row, col - 1],
+      [row, col + 1],
+    ];
+
+    targets.forEach(([r, c]) => {
+      if (r >= 0 && r < 10 && c >= 0 && c < 10) {
+        const key = [r, c].toString();
+
+        if (!this.attacksMade.has(key)) {
+          this.targetQueue.push([r, c]);
+        }
+      }
+    });
   }
 }
