@@ -1,4 +1,4 @@
-export function createBoard(element, color, gameboard = null) {
+export function createBoard(element, gameboard = null) {
   element.innerHTML = "";
   element.classList.add("board");
 
@@ -9,10 +9,10 @@ export function createBoard(element, color, gameboard = null) {
       cell.classList.add("cell");
       cell.dataset.row = row;
       cell.dataset.col = col;
-      cell.style.backgroundColor = color;
 
       if (gameboard && gameboard.getShipAt([row, col])) {
         cell.classList.add("ship");
+        cell.textContent = "🚢";
       }
 
       element.appendChild(cell);
