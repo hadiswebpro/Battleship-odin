@@ -20,8 +20,13 @@ export function createBoard(element, gameboard = null, playerName = "") {
       cell.dataset.row = row;
       cell.dataset.col = col;
 
-      if (gameboard && gameboard.getShipAt([row, col])) {
+      const ship = gameboard?.getShipAt([row, col]);
+
+      if (ship) {
         cell.classList.add("ship");
+
+        // Ready for ship.jpg import when image is added to src/images
+        cell.dataset.ship = "true";
         cell.textContent = "🚢";
       }
 
