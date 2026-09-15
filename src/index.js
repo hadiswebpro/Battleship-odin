@@ -2,6 +2,7 @@ import Game from "./game";
 
 import {
   createBoard,
+  createPlacementBoard,
   addAttackListener,
   showWinnerModal
 } from "./dom";
@@ -26,19 +27,20 @@ function start(mode = selectedMode) {
   selectedMode = mode;
   game = new Game(mode);
 
-  // Random placement for both players before battle
-  game.startGame();
-
   startScreen.classList.add("hidden");
   modeScreen.classList.add("hidden");
   winnerModal.classList.add("hidden");
   gameScreen.classList.remove("hidden");
 
-  createBoard(playerBoard, game.player1.gameboard, game.player1.name);
-  createBoard(enemyBoard, null, game.player2.name);
+  createPlacementBoard(playerBoard, game.player1, () => {
+    game.player2.placeShips();
 
-  addAttackListener(enemyBoard, game, () => {
-    showWinnerModal(game);
+    createBoard(playerBoard, game.player1.gameboard, game.player1.name);
+    createBoard(enemyBoard, null, game.player2.name);
+
+    addAttackListener(enemyBoard, game, () => {
+      showWinnerModal(game);
+    });
   });
 }
 
@@ -47,14 +49,6 @@ startButton.addEventListener("click", () => {
   modeScreen.classList.remove("hidden");
 });
 
-computerModeButton.addEventListener("click", () => {
-  start("computer");
-});
-
-playerModeButton.addEventListener("click", () => {
-  start("player");
-});
-
-restartButton.addEventListener("click", () => {
-  start(selectedMode);
-});
+computerModeButton.addEventListener("click", () => start("computer"));
+playerModeButton.addEventListener("click", () => start("player"));
+restartButton.addEventListener("click", () => start(selectedMode));
