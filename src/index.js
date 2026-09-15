@@ -22,9 +22,6 @@ const restartButton = document.querySelector("#restart-game");
 const playerBoard = document.querySelector("#player-board");
 const enemyBoard = document.querySelector("#enemy-board");
 
-const PLAYER_COLOR = "green";
-const ENEMY_COLOR = "red";
-
 function start(mode = selectedMode) {
   selectedMode = mode;
   game = new Game(mode);
@@ -34,8 +31,8 @@ function start(mode = selectedMode) {
   winnerModal.classList.add("hidden");
   gameScreen.classList.remove("hidden");
 
-  createBoard(playerBoard, PLAYER_COLOR, game.player1.gameboard);
-  createBoard(enemyBoard, ENEMY_COLOR);
+  createBoard(playerBoard, game.player1.gameboard);
+  createBoard(enemyBoard);
 
   addAttackListener(enemyBoard, game, () => {
     showWinnerModal(game);
