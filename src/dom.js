@@ -49,27 +49,29 @@ export function createPlacementBoard(element, player, onComplete) {
   function renderPlacement() {
     createBoard(element, player.gameboard, player.name);
 
-    const button = document.createElement("button");
-    button.textContent = "Rotate Ship ↻";
-    button.className = "rotate-ship";
-    element.appendChild(button);
+    const rotateButton = document.createElement("button");
+    rotateButton.textContent = "Rotate Ship ↻";
+    rotateButton.className = "rotate-ship";
+    element.appendChild(rotateButton);
 
-    button.addEventListener("click", () => {
+    const confirmButton = document.createElement("button");
+    confirmButton.textContent = "Confirm Placement 🚢";
+    confirmButton.className = "confirm-placement";
+    confirmButton.disabled = currentShipIndex !== ships.length;
+    element.appendChild(confirmButton);
+
+    rotateButton.addEventListener("click", () => {
       horizontal = !horizontal;
     });
 
-    const cells = element.querySelectorAll(".cell");
+    confirmButton.addEventListener("click", () => {
+      if (currentShipIndex === ships.length) onComplete();
+    });
 
-    cells.forEach((cell) => {
-      cell.addEventListener("mouseenter", () => {
-        previewShip(cell);
-      });
-
+    element.querySelectorAll(".cell").forEach((cell) => {
+      cell.addEventListener("mouseenter", () => previewShip(cell));
       cell.addEventListener("mouseleave", clearPreview);
-
-      cell.addEventListener("click", () => {
-        placeFromCell(cell);
-      });
+      cell.addEventListener("click", () => placeFromCell(cell));
     });
   }
 
@@ -77,19 +79,25 @@ export function createPlacementBoard(element, player, onComplete) {
     clearPreview();
 
     const coordinates = getCoordinates(cell);
+    const invalid = !coordinates.length || coordinates.some(([r, c]) => {
+      return player.gameboard.getShipAt([r, c]);
+    });
+
     coordinates.forEach(([r, c]) => {
       const target = element.querySelector(`[data-row="${r}"][data-col="${c}"]`);
-      if (target) target.classList.add("preview");
+      if (target) target.classList.add(invalid ? "invalid-preview" : "preview");
     });
   }
 
   function clearPreview() {
-    element.querySelectorAll(".preview").forEach((cell) => {
-      cell.classList.remove("preview");
+    element.querySelectorAll(".preview, .invalid-preview").forEach((cell) => {
+      cell.classList.remove("preview", "invalid-preview");
     });
   }
 
   function getCoordinates(cell) {
+    if (currentShipIndex >= ships.length) return [];
+
     const length = ships[currentShipIndex];
     const row = Number(cell.dataset.row);
     const col = Number(cell.dataset.col);
@@ -98,6 +106,7 @@ export function createPlacementBoard(element, player, onComplete) {
     for (let i = 0; i < length; i++) {
       const r = horizontal ? row : row + i;
       const c = horizontal ? col + i : col;
+
       if (r > 9 || c > 9) return [];
       coordinates.push([r, c]);
     }
@@ -106,21 +115,21 @@ export function createPlacementBoard(element, player, onComplete) {
   }
 
   function placeFromCell(cell) {
-    if (currentShipIndex >= ships.length) return;
-
     const coordinates = getCoordinates(cell);
     if (!coordinates.length) return;
+
+    const blocked = coordinates.some(([r, c]) => player.gameboard.getShipAt([r, c]));
+    if (blocked) return;
 
     try {
       player.placeShip(ships[currentShipIndex], coordinates);
       currentShipIndex++;
 
-      if (currentShipIndex === ships.length) {
-        onComplete();
-        return;
+      if (currentShipIndex < ships.length) {
+        renderPlacement();
+      } else {
+        renderPlacement();
       }
-
-      renderPlacement();
     } catch (error) {}
   }
 }
@@ -128,23 +137,19 @@ export function createPlacementBoard(element, player, onComplete) {
 export function showWinnerModal(game) {
   const modal = document.querySelector("#winner-modal");
   const text = document.querySelector("#winner-text");
-  const winner = game.getWinner();
-
-  text.textContent = `${winner.name} wins! 🚢`;
+  text.textContent = `${game.getWinner().name} wins! 🚢`;
   modal.classList.remove("hidden");
 }
 
 export function addAttackListener(boardElement, game, onGameOver) {
   boardElement.addEventListener("click", (event) => {
     const cell = event.target;
-
     if (!cell.classList.contains("cell")) return;
 
     const coordinate = [Number(cell.dataset.row), Number(cell.dataset.col)];
     const result = game.playTurn(coordinate);
 
     if (result === "already") return;
-
     cell.classList.add(result === "hit" ? "hit" : "miss");
 
     if (game.isGameOver()) onGameOver();
