@@ -14,7 +14,7 @@ module.exports = {
 
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./src/template.html",
+            template: "./src/index.html",
         }),
     ],
 
@@ -22,4 +22,19 @@ module.exports = {
         static: "./dist",
         open: true,
     },
+
+    module: {
+  rules: [
+    {
+      test: /\.js$/,
+      exclude: /node_modules/,
+      use: "babel-loader",
+    },
+
+    {
+      test: /\.(png|jpe?g|gif|webp|svg)$/i,
+      type: "asset/resource",
+    },
+  ],
+},
 };

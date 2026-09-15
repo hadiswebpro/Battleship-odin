@@ -1,4 +1,4 @@
-import shipImage from "./images/ship.jpg";
+import shipImage from "./images/ship.webp";
 
 export function createBoard(element, gameboard = null, playerName = "") {
   element.innerHTML = "";
