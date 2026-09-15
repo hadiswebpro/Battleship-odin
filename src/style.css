@@ -1,56 +1,88 @@
-#game {
-
-    display: flex;
-    gap: 50px;
-
+* {
+  box-sizing: border-box;
 }
 
+body {
+  min-height: 100vh;
+  margin: 0;
+  font-family: sans-serif;
+  color: white;
+  background-image: linear-gradient(rgba(0,40,80,.6), rgba(0,40,80,.8)), url("images/background.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+#start-screen,
+#mode-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+
+#start-screen img {
+  width: 350px;
+  border-radius: 20px;
+}
+
+button {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 12px;
+  background: #0b6fa4;
+  color: white;
+  cursor: pointer;
+}
+
+#game {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  padding-top: 50px;
+}
 
 .board {
-
-    display: grid;
-
-    grid-template-columns: repeat(8, 50px);
-
-    grid-template-rows: repeat(8, 50px);
-
+  display: grid;
+  grid-template-columns: repeat(10, 50px);
+  grid-template-rows: repeat(10, 50px);
 }
-
 
 .cell {
-
-    width: 50px;
-    height: 50px;
-
-    border: 1px solid black;
-
-    background-color: #eee;
-
+  width: 50px;
+  height: 50px;
+  border: 1px solid white;
+  background: rgba(255,255,255,.2);
 }
 
-
-.player-cell {
-
-    background-color: green;
-
+.ship {
+  background: #7b4b2a;
 }
 
-
-.enemy-cell {
-
-    background-color: red;
-
+.hit {
+  background: black;
 }
 
-.hit{
-
-    background-color: black;
-
+.miss {
+  background: lightblue;
 }
 
+.hidden {
+  display: none;
+}
 
-.miss{
+#winner-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.5);
+}
 
-    background-color: lightblue;
-
+.modal-content {
+  background: #064b70;
+  padding: 40px;
+  border-radius: 20px;
 }
