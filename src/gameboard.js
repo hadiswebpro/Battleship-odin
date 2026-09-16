@@ -21,6 +21,12 @@ export default class Gameboard {
       this.board.set(key, ship);
     });
 
+    ship.coordinates = coordinates;
+    ship.direction =
+      coordinates.length > 1 && coordinates[0][0] === coordinates[1][0]
+        ? "horizontal"
+        : "vertical";
+
     this.ships.push(ship);
   }
 
