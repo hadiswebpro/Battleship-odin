@@ -6,11 +6,7 @@ const shipImages = {
   Destroyer: new URL("./images/destroyer.webp", import.meta.url).href,
 };
 
-const sounds = {};
-
-export function playSound(name) {
-  if (!sounds[name]) return;
-}
+export function playSound() {}
 
 export function createPlacementBoard(boardElement, player, callback) {
   createBoard(boardElement, player.gameboard, player.name);
@@ -20,49 +16,66 @@ export function createPlacementBoard(boardElement, player, callback) {
 export function enableShipPlacement(boardElement, player, onReady) {
   let selectedShip = null;
   let direction = "horizontal";
+  let preview = null;
 
-  document.querySelectorAll(".ship-option").forEach((button) => {
+  const buttons = [...document.querySelectorAll(".ship-option")];
+
+  buttons.forEach((button) => {
     button.onclick = () => {
-      selectedShip = { name: button.dataset.ship, length: Number(button.dataset.length) };
-      document.querySelectorAll(".ship-option").forEach((b) => b.classList.remove("active"));
+      if (button.classList.contains("placed")) return;
+      selectedShip = {
+        name: button.dataset.ship,
+        length: Number(button.dataset.length),
+      };
+      buttons.forEach((b) => b.classList.remove("active"));
       button.classList.add("active");
     };
   });
 
-  document.querySelector(".rotate-ship")?.addEventListener("click", () => {
+  const rotate = document.querySelector(".rotate-ship");
+  rotate?.addEventListener("click", () => {
     direction = direction === "horizontal" ? "vertical" : "horizontal";
+    if (preview) renderPreview(preview);
   });
 
   boardElement.querySelectorAll(".cell").forEach((cell) => {
-    cell.onclick = () => {
+    cell.onmouseenter = () => {
       if (!selectedShip) return;
-      const coordinates = getCoordinates(+cell.dataset.row, +cell.dataset.col, selectedShip.length, direction);
+      preview = { row: +cell.dataset.row, col: +cell.dataset.col };
+      renderPreview(preview, boardElement, selectedShip, direction, player);
+    };
+
+    cell.onclick = () => {
+      if (!selectedShip || !preview) return;
+      const coordinates = getCoordinates(preview.row, preview.col, selectedShip.length, direction);
       if (!coordinates || !isValidPlacement(player, coordinates)) return;
 
       player.placeShip(selectedShip.length, coordinates, selectedShip.name);
-      document.querySelector(`[data-ship="${selectedShip.name}"]`)?.classList.add("disabled");
+      document.querySelector(`[data-ship="${selectedShip.name}"]`)?.classList.add("placed");
+      selectedShip = null;
+      preview = null;
       createBoard(boardElement, player.gameboard, player.name);
       enableShipPlacement(boardElement, player, onReady);
     };
   });
 
   document.querySelector(".confirm-placement")?.addEventListener("click", () => {
-    if (player.gameboard.ships?.length !== 5) {
-      showPlacementError();
-      return;
-    }
+    const ships = player.gameboard.ships || [];
+    const ready = ships.length === 5 && ships.reduce((sum, ship) => sum + ship.length, 0) === 17;
+    if (!ready) return showPlacementError();
     onReady?.();
   });
 }
 
-function showPlacementError() {
-  let error = document.querySelector("#placement-error");
-  if (!error) {
-    error = document.createElement("p");
-    error.id = "placement-error";
-    document.querySelector(".placement-screen .card")?.prepend(error);
-  }
-  error.textContent = "⚠ Please place all your ships before entering battle";
+function renderPreview(pos, boardElement, ship, direction, player) {
+  boardElement.querySelectorAll(".preview").forEach((c) => c.classList.remove("preview", "invalid"));
+  const coords = getCoordinates(pos.row, pos.col, ship.length, direction);
+  if (!coords) return;
+  const invalid = !isValidPlacement(player, coords);
+  coords.forEach(([r, c]) => {
+    const cell = boardElement.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+    cell?.classList.add("preview", ...(invalid ? ["invalid"] : []));
+  });
 }
 
 function getCoordinates(row, col, length, direction) {
@@ -80,12 +93,21 @@ function isValidPlacement(player, coordinates) {
   return !coordinates.some((c) => player.gameboard.getShipAt(c));
 }
 
+function showPlacementError() {
+  let error = document.querySelector("#placement-error");
+  if (!error) {
+    error = document.createElement("p");
+    error.id = "placement-error";
+    document.querySelector(".placement-screen .card")?.append(error);
+  }
+  error.textContent = "⚠ Please place all your ships before entering battle";
+}
+
 export function createBoard(element, gameboard = null, playerName = "", hideShips = false) {
   if (!element) return;
   element.innerHTML = "";
   const board = document.createElement("div");
   board.className = "board";
-
   for (let row = 0; row < 10; row++) {
     for (let col = 0; col < 10; col++) {
       const cell = document.createElement("div");
@@ -95,23 +117,23 @@ export function createBoard(element, gameboard = null, playerName = "", hideShip
       board.appendChild(cell);
     }
   }
-
   element.appendChild(board);
   renderShips(element, gameboard, hideShips);
 }
 
 function renderShips(element, gameboard, hideShips) {
   if (hideShips) return;
-
   gameboard?.ships?.forEach((ship) => {
-    if (!ship.coordinates) return;
-
+    ship.coordinates.forEach(([r, c]) => {
+      const cell = element.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+      cell?.classList.add("occupied");
+    });
     const first = element.querySelector(`[data-row="${ship.coordinates[0][0]}"][data-col="${ship.coordinates[0][1]}"]`);
     if (!first) return;
-
     const img = document.createElement("img");
     img.src = shipImages[ship.name];
     img.className = `ship-image ${ship.direction || "horizontal"}`;
+    img.style.width = `${ship.length * 38}px`;
     first.appendChild(img);
   });
 }
