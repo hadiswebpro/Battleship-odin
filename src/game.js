@@ -31,6 +31,7 @@ export default class Game {
 
   attack(coordinate) {
     const opponent = this.getOpponent(this.currentPlayer);
+
     const result = this.currentPlayer.attack(
       opponent.gameboard,
       coordinate
@@ -62,13 +63,7 @@ export default class Game {
   }
 
   playTurn(coordinate) {
-    const result = this.attack(coordinate);
-
-    if (result !== "already") {
-      this.computerTurn();
-    }
-
-    return result;
+    return this.attack(coordinate);
   }
 
   isGameOver() {
@@ -81,6 +76,7 @@ export default class Game {
   getWinner() {
     if (this.player2.gameboard.allShipsSunk()) return this.player1;
     if (this.player1.gameboard.allShipsSunk()) return this.player2;
+
     return null;
   }
 }
