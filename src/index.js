@@ -3,6 +3,7 @@ import { startGameFlow } from "./gameFlow";
 
 const startScreen = document.querySelector("#start-screen");
 const modeScreen = document.querySelector("#mode-screen");
+const placementScreen = document.querySelector("#placement-screen");
 const startButton = document.querySelector("#start-game");
 const computerButton = document.querySelector("#computer-mode");
 const playerButton = document.querySelector("#player-mode");
@@ -14,9 +15,11 @@ startButton?.addEventListener("click", () => {
 
 computerButton?.addEventListener("click", () => {
   modeScreen?.classList.add("hidden");
+  placementScreen?.classList.remove("hidden");
   startGameFlow("computer");
 });
 
 playerButton?.addEventListener("click", () => {
   alert("Player vs Player is not available yet.");
 });
+
