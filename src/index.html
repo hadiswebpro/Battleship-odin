@@ -15,14 +15,8 @@
   <div class="card">
     <h2>Choose Opponent</h2>
     <div class="mode-buttons">
-      <div class="card player-card">
-        <h3>👥 Player vs Player</h3>
-        <button id="player-mode" class="primary-btn">Select</button>
-      </div>
-      <div class="card player-card">
-        <h3>🤖 Player vs Computer</h3>
-        <button id="computer-mode" class="primary-btn">Select</button>
-      </div>
+      <div class="card player-card"><h3>👥 Player vs Player</h3><button id="player-mode" class="primary-btn">Select</button></div>
+      <div class="card player-card"><h3>🤖 Player vs Computer</h3><button id="computer-mode" class="primary-btn">Select</button></div>
     </div>
   </div>
 </section>
@@ -38,25 +32,11 @@
       <button class="ship-option" data-ship="Submarine" data-length="3">Submarine (3)</button>
       <button class="ship-option" data-ship="Destroyer" data-length="2">Destroyer (2)</button>
     </div>
-    <button class="rotate-ship">Rotate</button>
     <div id="player-board"></div>
-    <button id="confirm-placement" class="confirm-placement">Are you ready?</button>
+    <div class="placement-actions">
+      <button class="rotate-ship">Rotate</button>
+      <button id="confirm-placement" class="confirm-placement">Are you ready?</button>
+    </div>
   </div>
 </section>
-
-<main id="game" class="hidden game-screen">
-  <button id="quit-game" class="back-btn">← Quit</button>
-  <h2 id="turn-status">Player Turn</h2>
-  <div class="card"><h2>Your Board</h2><div id="your-board"></div></div>
-  <div class="card"><h2>Enemy Board</h2><div id="enemy-board"></div></div>
-</main>
-
-<div id="ready-modal" class="modal hidden">
-  <div class="modal-content">
-    <h2>Are you ready?</h2>
-    <p>Your fleet is ready.</p>
-    <button id="start-battle" class="primary-btn">Enter Game</button>
-    <button id="ready-back" class="primary-btn">Back</button>
-  </div>
-</div>
 </body>
