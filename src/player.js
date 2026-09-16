@@ -17,33 +17,24 @@ export default class Player {
       { name: "Destroyer", length: 2 },
     ];
 
-    this.shipLengths = this.fleet.map(ship => ship.length);
+    this.shipLengths = this.fleet.map(({ length }) => length);
 
     if (autoPlace) this.placeShips();
   }
 
   placeShips() {
-    this.fleet.forEach(({ name, length }) => {
+    this.clearBoard();
+
+    for (const { name, length } of this.fleet) {
       let placed = false;
-      let attempts = 0;
 
-      while (!placed && attempts < 1000) {
-        attempts++;
-
+      while (!placed) {
         try {
-          this.placeShip(
-            length,
-            this.generateCoordinates(length),
-            name
-          );
+          this.placeShip(length, this.generateCoordinates(length), name);
           placed = true;
         } catch (error) {}
       }
-
-      if (!placed) {
-        throw new Error(`Could not place ${name}`);
-      }
-    });
+    }
   }
 
   placeShip(length, coordinates, name = "Ship") {
@@ -52,7 +43,7 @@ export default class Player {
   }
 
   generateCoordinates(length) {
-    const horizontal = Math.random() > 0.5;
+    const horizontal = Math.random() < 0.5;
     const row = Math.floor(Math.random() * 10);
     const col = Math.floor(Math.random() * 10);
     const coordinates = [];
@@ -83,33 +74,37 @@ export default class Player {
     let coordinate;
 
     do {
-      coordinate = this.targetQueue.length
-        ? this.targetQueue.shift()
-        : [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
+      coordinate = this.targetQueue.shift() || [
+        Math.floor(Math.random() * 10),
+        Math.floor(Math.random() * 10),
+      ];
     } while (this.attacksMade.has(coordinate.toString()));
 
     this.attacksMade.add(coordinate.toString());
+
     const result = enemyBoard.receiveAttack(coordinate);
 
-    if (result === "hit") this.addTargetsAround(coordinate);
+    if (result === "hit") {
+      this.addTargetsAround(coordinate);
+    }
 
     return result;
   }
 
   addTargetsAround([row, col]) {
-    [[row - 1, col], [row + 1, col], [row, col - 1], [row, col + 1]]
-      .forEach(([r, c]) => {
+    [
+      [row - 1, col],
+      [row + 1, col],
+      [row, col - 1],
+      [row, col + 1],
+    ].forEach(([r, c]) => {
+      if (r >= 0 && r < 10 && c >= 0 && c < 10) {
         const key = [r, c].toString();
 
-        if (
-          r >= 0 &&
-          r < 10 &&
-          c >= 0 &&
-          c < 10 &&
-          !this.attacksMade.has(key)
-        ) {
+        if (!this.attacksMade.has(key)) {
           this.targetQueue.push([r, c]);
         }
-      });
+      }
+    });
   }
 }
