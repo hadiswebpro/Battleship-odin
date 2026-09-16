@@ -18,12 +18,6 @@ body {
  background:linear-gradient(rgba(0,30,60,.45),rgba(0,20,50,.65)),url("./images/background.webp");
  background-size:cover;
  background-position:center;
- animation:oceanMove 18s infinite alternate ease-in-out;
-}
-
-@keyframes oceanMove {
- from {background-position:center top;}
- to {background-position:center 30px;}
 }
 
 .screen,.main-menu,.player-selection,.placement-screen,.game-screen {
@@ -34,28 +28,57 @@ body {
  padding:20px;
 }
 
+.player-selection .card {
+ text-align:center;
+}
+
+.players-container,.mode-buttons {
+ display:flex;
+ flex-direction:row;
+ justify-content:center;
+ align-items:center;
+ gap:20px;
+}
+
+.player-card {
+ min-width:220px;
+}
+
+.ship-selector {
+ display:flex;
+ flex-wrap:wrap;
+ justify-content:center;
+ gap:12px;
+ margin-bottom:20px;
+}
+
+.ship-option {
+ padding:12px 18px;
+ border-radius:12px;
+ border:none;
+ cursor:pointer;
+ transition:.3s;
+}
+
+.ship-option:hover {
+ transform:translateY(-3px);
+}
+
+.ship-option.active {
+ outline:3px solid #00b4d8;
+}
+
+.ship-option.disabled {
+ opacity:.4;
+ pointer-events:none;
+}
+
 .card {
  background:rgba(0,40,80,.65);
  backdrop-filter:blur(14px);
  border:1px solid var(--border);
  border-radius:20px;
  padding:30px;
-}
-
-.game-title {
- animation:floating 4s infinite ease-in-out;
-}
-
-@keyframes floating {
- 50% {transform:translateY(-10px);}
-}
-
-.ship-image {
- width:90%;
- height:90%;
- object-fit:contain;
- pointer-events:none;
- animation:floating 4s infinite ease-in-out;
 }
 
 .primary-btn,.rotate-ship,.confirm-placement,.modal-btn {
@@ -68,8 +91,8 @@ body {
  transition:.3s;
 }
 
-.primary-btn:hover,.rotate-ship:hover,.confirm-placement:hover,.modal-btn:hover {
- transform:translateY(-4px) scale(1.03);
+.primary-btn:hover,.rotate-ship:hover,.confirm-placement:hover {
+ transform:translateY(-4px);
 }
 
 .back-btn {
@@ -77,8 +100,6 @@ body {
  top:20px;
  left:20px;
  background:var(--glass);
- backdrop-filter:blur(10px);
- border:1px solid var(--border);
  color:white;
  padding:10px 20px;
  border-radius:12px;
@@ -90,12 +111,7 @@ body {
  justify-content:center;
  align-items:center;
  gap:40px;
-}
-
-.board-wrapper {
- display:flex;
- flex-direction:column;
- align-items:center;
+ flex-wrap:wrap;
 }
 
 .board {
@@ -109,25 +125,19 @@ body {
 .cell {
  width:38px;
  height:38px;
- position:relative;
  display:flex;
  justify-content:center;
  align-items:center;
+ position:relative;
  background:var(--water);
  border:1px solid rgba(255,255,255,.18);
 }
 
-.hit::after,.miss::after,.sunk-effect::after {
- position:absolute;
- left:50%;
- top:50%;
- transform:translate(-50%,-50%);
- z-index:2;
+.ship-image {
+ width:90%;
+ height:90%;
+ object-fit:contain;
 }
-
-.hit::after {content:"💥";}
-.miss::after {content:"💧";}
-.sunk-effect::after {content:"🔥";}
 
 .modal {
  position:fixed;
@@ -146,39 +156,3 @@ body {
 }
 
 .hidden {display:none!important;}
-
-@media(max-width:900px) and (orientation:landscape){
- .screen,.game-screen,.placement-screen {
-  min-height:100vw;
-  transform:scale(.85);
- }
-
- #game {
-  gap:15px;
-  flex-wrap:nowrap;
- }
-
- .board {
-  grid-template-columns:repeat(10,28px);
-  grid-template-rows:repeat(10,28px);
- }
-
- .cell {
-  width:28px;
-  height:28px;
- }
-}
-
-@media(max-width:600px) and (orientation:portrait){
- body::before {
-  content:"Please rotate your device";
-  position:fixed;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#003049;
-  z-index:999;
-  font-size:24px;
- }
-}
