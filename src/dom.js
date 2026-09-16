@@ -1,9 +1,9 @@
 const shipImages = {
-  Carrier: new URL("./images/ships/carrier.png", import.meta.url).href,
-  Battleship: new URL("./images/ships/battleship.png", import.meta.url).href,
-  Cruiser: new URL("./images/ships/cruiser.png", import.meta.url).href,
-  Submarine: new URL("./images/ships/submarine.png", import.meta.url).href,
-  Destroyer: new URL("./images/ships/destroyer.png", import.meta.url).href,
+  Carrier: new URL("./images/carrier.webp", import.meta.url).href,
+  Battleship: new URL("./images/battleship.webp", import.meta.url).href,
+  Cruiser: new URL("./images/cruiser.webp", import.meta.url).href,
+  Submarine: new URL("./images/submarine.webp", import.meta.url).href,
+  Destroyer: new URL("./images/destroyer.webp", import.meta.url).href,
 };
 
 const sounds = {};
@@ -102,9 +102,13 @@ export function createBoard(element, gameboard = null, playerName = "", hideShip
 
 function renderShips(element, gameboard, hideShips) {
   if (hideShips) return;
+
   gameboard?.ships?.forEach((ship) => {
+    if (!ship.coordinates) return;
+
     const first = element.querySelector(`[data-row="${ship.coordinates[0][0]}"][data-col="${ship.coordinates[0][1]}"]`);
     if (!first) return;
+
     const img = document.createElement("img");
     img.src = shipImages[ship.name];
     img.className = `ship-image ${ship.direction || "horizontal"}`;
