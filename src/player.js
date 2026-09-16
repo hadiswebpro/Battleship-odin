@@ -8,37 +8,46 @@ export default class Player {
     this.color = color;
     this.attacksMade = new Set();
     this.targetQueue = [];
-    this.shipLengths = [5, 4, 3, 3, 2];
+
+    this.fleet = [
+      { name: "Carrier", length: 5 },
+      { name: "Battleship", length: 4 },
+      { name: "Cruiser", length: 3 },
+      { name: "Submarine", length: 3 },
+      { name: "Destroyer", length: 2 },
+    ];
+
+    this.shipLengths = this.fleet.map(ship => ship.length);
 
     if (autoPlace) this.placeShips();
   }
 
   placeShips() {
-    const fleet = [5, 4, 3, 3, 2];
-
-    fleet.forEach((length) => {
+    this.fleet.forEach(({ name, length }) => {
       let placed = false;
       let attempts = 0;
 
       while (!placed && attempts < 1000) {
-        attempts += 1;
+        attempts++;
 
         try {
-          this.placeShip(length, this.generateCoordinates(length));
+          this.placeShip(
+            length,
+            this.generateCoordinates(length),
+            name
+          );
           placed = true;
-        } catch (error) {
-          // Try another random position when the placement overlaps.
-        }
+        } catch (error) {}
       }
 
       if (!placed) {
-        throw new Error(`Could not place ship of length ${length}`);
+        throw new Error(`Could not place ${name}`);
       }
     });
   }
 
-  placeShip(length, coordinates) {
-    const ship = new Ship(length);
+  placeShip(length, coordinates, name = "Ship") {
+    const ship = new Ship(length, name);
     this.gameboard.placeShip(ship, coordinates);
   }
 
@@ -83,12 +92,13 @@ export default class Player {
     const result = enemyBoard.receiveAttack(coordinate);
 
     if (result === "hit") this.addTargetsAround(coordinate);
+
     return result;
   }
 
   addTargetsAround([row, col]) {
-    [[row - 1, col], [row + 1, col], [row, col - 1], [row, col + 1]].forEach(
-      ([r, c]) => {
+    [[row - 1, col], [row + 1, col], [row, col - 1], [row, col + 1]]
+      .forEach(([r, c]) => {
         const key = [r, c].toString();
 
         if (
@@ -96,12 +106,10 @@ export default class Player {
           r < 10 &&
           c >= 0 &&
           c < 10 &&
-          !this.attacksMade.has(key) &&
-          !this.targetQueue.some((target) => target.toString() === key)
+          !this.attacksMade.has(key)
         ) {
           this.targetQueue.push([r, c]);
         }
-      }
-    );
+      });
   }
 }
