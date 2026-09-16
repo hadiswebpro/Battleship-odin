@@ -37,7 +37,7 @@ export default class Game {
       coordinate
     );
 
-    if (result !== "already") {
+    if (result !== "already" && !this.isGameOver()) {
       this.switchTurn();
     }
 
@@ -57,13 +57,25 @@ export default class Game {
       this.player1.gameboard
     );
 
-    this.switchTurn();
+    if (!this.isGameOver()) {
+      this.switchTurn();
+    }
 
     return result;
   }
 
   playTurn(coordinate) {
-    return this.attack(coordinate);
+    const result = this.attack(coordinate);
+
+    if (
+      this.mode === "computer" &&
+      result !== "already" &&
+      !this.isGameOver()
+    ) {
+      this.computerTurn();
+    }
+
+    return result;
   }
 
   isGameOver() {
