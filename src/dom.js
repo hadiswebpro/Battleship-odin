@@ -6,19 +6,12 @@ const shipImages = {
   Destroyer: "",
 };
 
-const sounds = {
-  ocean: null,
-  click: null,
-  hit: null,
-  miss: null,
-  victory: null,
-};
+const sounds = {};
 
 export function loadSounds() {
-  Object.keys(sounds).forEach((name) => {
-    const audio = new Audio();
+  ["ocean", "click", "hit", "miss", "victory"].forEach((name) => {
+    const audio = new Audio(`./sounds/${name}.mp3`);
     audio.preload = "auto";
-    audio.src = `./sounds/${name}.mp3`;
     sounds[name] = audio;
   });
 }
@@ -27,6 +20,113 @@ export function playSound(name) {
   if (!sounds[name]) return;
   sounds[name].currentTime = 0;
   sounds[name].play().catch(() => {});
+}
+
+export function connectModeSelection(startGame) {
+  document.querySelector("#player-vs-computer")?.addEventListener("click", () => {
+    startGame("computer");
+  });
+
+  document.querySelector("#player-vs-player")?.addEventListener("click", () => {
+    startGame("player");
+  });
+}
+
+export function enableShipPlacement(boardElement, player) {
+  let selectedShip = null;
+  let direction = "horizontal";
+
+  document.querySelectorAll(".ship-option").forEach((button) => {
+    button.addEventListener("click", () => {
+      selectedShip = {
+        name: button.dataset.ship,
+        length: Number(button.dataset.length),
+      };
+
+      document.querySelectorAll(".ship-option").forEach((item) => {
+        item.classList.remove("active");
+      });
+
+      button.classList.add("active");
+      playSound("click");
+    });
+  });
+
+  document.querySelector(".rotate-ship")?.addEventListener("click", () => {
+    direction = direction === "horizontal" ? "vertical" : "horizontal";
+  });
+
+  boardElement.querySelectorAll(".cell").forEach((cell) => {
+    cell.addEventListener("mouseenter", () => {
+      if (!selectedShip) return;
+      showPlacementPreview(boardElement, cell, selectedShip.length, direction);
+    });
+
+    cell.addEventListener("mouseleave", clearPreview);
+
+    cell.addEventListener("click", () => {
+      if (!selectedShip) return;
+
+      const coordinates = getCoordinates(
+        Number(cell.dataset.row),
+        Number(cell.dataset.col),
+        selectedShip.length,
+        direction
+      );
+
+      if (!coordinates) return;
+
+      try {
+        player.placeShip(
+          selectedShip.length,
+          coordinates,
+          selectedShip.name
+        );
+
+        selectedShip = null;
+        clearPreview();
+        playSound("click");
+      } catch (error) {}
+    });
+  });
+}
+
+function getCoordinates(row, col, length, direction) {
+  const coordinates = [];
+
+  for (let i = 0; i < length; i++) {
+    const r = direction === "vertical" ? row + i : row;
+    const c = direction === "horizontal" ? col + i : col;
+
+    if (r > 9 || c > 9) return null;
+    coordinates.push([r, c]);
+  }
+
+  return coordinates;
+}
+
+function showPlacementPreview(board, cell, length, direction) {
+  clearPreview();
+
+  const coordinates = getCoordinates(
+    Number(cell.dataset.row),
+    Number(cell.dataset.col),
+    length,
+    direction
+  );
+
+  if (!coordinates) return;
+
+  coordinates.forEach(([row, col]) => {
+    board.querySelector(`[data-row="${row}"][data-col="${col}"]`)
+      ?.classList.add("preview");
+  });
+}
+
+function clearPreview() {
+  document.querySelectorAll(".preview").forEach((cell) => {
+    cell.classList.remove("preview");
+  });
 }
 
 export function createBoard(element, gameboard = null, playerName = "", hideShips = false) {
@@ -51,23 +151,15 @@ export function createBoard(element, gameboard = null, playerName = "", hideShip
       cell.dataset.col = col;
 
       const result = gameboard?.getAttackResult([row, col]);
-      if (result) {
-        cell.classList.add(result);
-        playSound(result === "hit" ? "hit" : "miss");
-      }
+      if (result) cell.classList.add(result);
 
       const ship = gameboard?.getShipAt([row, col]);
-      if (ship && !hideShips) {
-        cell.classList.add("ship");
-        cell.dataset.ship = ship.name;
-
-        if (shipImages[ship.name]) {
-          const image = document.createElement("img");
-          image.className = "ship-image";
-          image.src = `./images/ships/${shipImages[ship.name]}`;
-          image.alt = ship.name;
-          cell.appendChild(image);
-        }
+      if (ship && !hideShips && shipImages[ship.name]) {
+        const image = document.createElement("img");
+        image.className = "ship-image";
+        image.src = `./images/ships/${shipImages[ship.name]}`;
+        image.alt = ship.name;
+        cell.appendChild(image);
       }
 
       board.appendChild(cell);
@@ -92,13 +184,15 @@ export function addAttackListener(boardElement, game, playerBoardElement, onGame
     const cell = event.target.closest(".cell");
     if (!cell) return;
 
-    const coordinate = [Number(cell.dataset.row), Number(cell.dataset.col)];
-    const result = game.playTurn(coordinate);
+    const result = game.playTurn([
+      Number(cell.dataset.row),
+      Number(cell.dataset.col),
+    ]);
 
     if (result === "already") return;
 
     cell.classList.add(result);
-    playSound(result === "hit" ? "hit" : "miss");
+    playSound(result);
 
     if (game.isGameOver()) onGameOver();
   });
