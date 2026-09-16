@@ -1,10 +1,12 @@
 <body>
 <section id="start-screen" class="main-menu">
   <div class="card main-menu-card">
-    <h1 class="game-title">⚓ Battleship</h1>
-    <p class="subtitle">Sink the enemy fleet</p>
-    <img src="./images/ship.webp" alt="Battleship ship" class="main-ship-image">
-    <button id="start-game" class="primary-btn">Start Game</button>
+    <div class="hero-content">
+      <h1 class="game-title">⚓ Battleship</h1>
+      <p class="subtitle">Sink the enemy fleet</p>
+      <button id="start-game" class="primary-btn">Start Game</button>
+    </div>
+    <img class="main-ship-image" alt="Battleship ship">
   </div>
 </section>
 
@@ -55,22 +57,6 @@
     <p>Your fleet is ready.</p>
     <button id="start-battle" class="primary-btn">Enter Game</button>
     <button id="ready-back" class="primary-btn">Back</button>
-  </div>
-</div>
-
-<div id="quit-modal" class="modal hidden">
-  <div class="modal-content">
-    <h2>Are you sure?</h2>
-    <button id="quit-confirm" class="primary-btn">Quit</button>
-    <button id="continue-game" class="primary-btn">Continue</button>
-  </div>
-</div>
-
-<div id="winner-modal" class="modal hidden">
-  <div class="modal-content">
-    <h2 id="winner-text"></h2>
-    <button id="play-again" class="primary-btn">Play Again</button>
-    <button id="winner-main-menu" class="primary-btn">Main Menu</button>
   </div>
 </div>
 </body>
