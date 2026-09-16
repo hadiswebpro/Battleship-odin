@@ -1,9 +1,9 @@
 const shipImages = {
-  Carrier: "",
-  Battleship: "",
-  Cruiser: "",
-  Submarine: "",
-  Destroyer: "",
+  Carrier: "carrier.png",
+  Battleship: "battleship.png",
+  Cruiser: "cruiser.png",
+  Submarine: "submarine.png",
+  Destroyer: "destroyer.png",
 };
 
 const sounds = {};
@@ -27,12 +27,17 @@ export function connectModeSelection(startGame) {
   document.querySelector("#player-vs-player")?.addEventListener("click", () => startGame("player"));
 }
 
+export function createPlacementBoard(boardElement, player, callback) {
+  createBoard(boardElement, player.gameboard, player.name);
+  enableShipPlacement(boardElement, player, callback);
+}
+
 export function enableShipPlacement(boardElement, player, onReady) {
   let selectedShip = null;
   let direction = "horizontal";
 
   document.querySelectorAll(".ship-option").forEach((button) => {
-    const select = () => {
+    button.addEventListener("click", () => {
       selectedShip = {
         name: button.dataset.ship,
         length: Number(button.dataset.length),
@@ -40,62 +45,39 @@ export function enableShipPlacement(boardElement, player, onReady) {
       document.querySelectorAll(".ship-option").forEach((item) => item.classList.remove("active"));
       button.classList.add("active");
       playSound("click");
-    };
-
-    button.addEventListener("click", select);
-    button.draggable = true;
-    button.addEventListener("dragstart", select);
+    });
   });
 
   document.querySelector(".rotate-ship")?.addEventListener("click", () => {
     direction = direction === "horizontal" ? "vertical" : "horizontal";
-    playSound("click");
   });
 
   boardElement.querySelectorAll(".cell").forEach((cell) => {
-    cell.addEventListener("dragover", (event) => {
-      event.preventDefault();
-      if (selectedShip) showPlacementPreview(boardElement, cell, selectedShip, direction, player);
-    });
+    cell.addEventListener("click", () => {
+      if (!selectedShip) return;
 
-    cell.addEventListener("mouseenter", () => {
-      if (selectedShip) showPlacementPreview(boardElement, cell, selectedShip, direction, player);
-    });
+      const coordinates = getCoordinates(
+        Number(cell.dataset.row),
+        Number(cell.dataset.col),
+        selectedShip.length,
+        direction
+      );
 
-    cell.addEventListener("mouseleave", clearPreview);
+      if (!coordinates || !isValidPlacement(player, coordinates)) return;
 
-    cell.addEventListener("drop", (event) => {
-      event.preventDefault();
-      placeSelectedShip(cell);
-    });
-
-    cell.addEventListener("click", () => placeSelectedShip(cell));
-  });
-
-  document.querySelector(".confirm-placement")?.addEventListener("click", () => {
-    onReady?.();
-  });
-
-  function placeSelectedShip(cell) {
-    if (!selectedShip) return;
-
-    const coordinates = getCoordinates(
-      Number(cell.dataset.row),
-      Number(cell.dataset.col),
-      selectedShip.length,
-      direction
-    );
-
-    if (!coordinates || !isValidPlacement(player, coordinates)) return;
-
-    try {
       player.placeShip(selectedShip.length, coordinates, selectedShip.name);
-      playSound("click");
+      buttonPlaced(selectedShip.name);
       selectedShip = null;
-      clearPreview();
-      createBoard(boardElement.parentElement, player.gameboard, player.name, false);
-    } catch (error) {}
-  }
+      createBoard(boardElement, player.gameboard, player.name);
+      enableShipPlacement(boardElement, player, onReady);
+    });
+  });
+
+  document.querySelector(".confirm-placement")?.addEventListener("click", () => onReady?.());
+}
+
+function buttonPlaced(name) {
+  document.querySelector(`[data-ship="${name}"]`)?.classList.add("disabled");
 }
 
 function isValidPlacement(player, coordinates) {
@@ -108,7 +90,6 @@ function getCoordinates(row, col, length, direction) {
   for (let i = 0; i < length; i++) {
     const r = direction === "vertical" ? row + i : row;
     const c = direction === "horizontal" ? col + i : col;
-
     if (r > 9 || c > 9) return null;
     coordinates.push([r, c]);
   }
@@ -116,33 +97,9 @@ function getCoordinates(row, col, length, direction) {
   return coordinates;
 }
 
-function showPlacementPreview(board, cell, ship, direction, player) {
-  clearPreview();
-
-  const coordinates = getCoordinates(
-    Number(cell.dataset.row),
-    Number(cell.dataset.col),
-    ship.length,
-    direction
-  );
-
-  const valid = coordinates && isValidPlacement(player, coordinates);
-
-  if (!coordinates) return;
-
-  coordinates.forEach(([row, col]) => {
-    board.querySelector(`[data-row="${row}"][data-col="${col}"]`)
-      ?.classList.add(valid ? "preview" : "invalid-preview");
-  });
-}
-
-function clearPreview() {
-  document.querySelectorAll(".preview,.invalid-preview").forEach((cell) => {
-    cell.classList.remove("preview", "invalid-preview");
-  });
-}
-
 export function createBoard(element, gameboard = null, playerName = "", hideShips = false) {
+  if (!element) return;
+
   element.innerHTML = "";
   const board = document.createElement("div");
   board.className = "board";
