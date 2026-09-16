@@ -1,7 +1,7 @@
 import Game from "./game";
 import {
   createBoard,
-  enableShipPlacement,
+  createPlacementBoard,
   playSound,
 } from "./dom";
 
@@ -14,12 +14,12 @@ export function startGameFlow(mode = "computer") {
   const playerBoard = document.querySelector("#player-board");
 
   if (playerBoard) {
-    createBoard(playerBoard, game.player1.gameboard, game.player1.name);
-
-    enableShipPlacement(playerBoard, game.player1, () => {
+    createPlacementBoard(playerBoard, game.player1, () => {
       showReadyModal(() => startBattle(game));
     });
   }
+
+  connectBackButtons();
 
   return game;
 }
@@ -27,106 +27,83 @@ export function startGameFlow(mode = "computer") {
 function startBattle(game) {
   playSound("ocean");
 
-  createBoard(
-    document.querySelector("#your-board"),
-    game.player1.gameboard,
-    game.player1.name,
-    false
-  );
+  document.querySelector("#placement-screen")?.classList.add("hidden");
+  document.querySelector("#game")?.classList.remove("hidden");
 
-  createBoard(
-    document.querySelector("#enemy-board"),
-    game.player2.gameboard,
-    game.player2.name,
-    true
-  );
+  createBoard(document.querySelector("#your-board"), game.player1.gameboard, game.player1.name, false);
+  createBoard(document.querySelector("#enemy-board"), game.player2.gameboard, game.player2.name, true);
 
   connectEnemyBoard(game);
-  updateTurn("Your Turn");
   connectBattleControls(game);
+  updateTurn("Player Turn");
 }
 
 function connectEnemyBoard(game) {
   const board = document.querySelector("#enemy-board");
   if (!board) return;
 
-  board.addEventListener("click", (event) => {
+  board.onclick = (event) => {
     const cell = event.target.closest(".cell");
     if (!cell || game.currentPlayer !== game.player1) return;
 
-    const coordinate = [
+    const result = game.playTurn([
       Number(cell.dataset.row),
       Number(cell.dataset.col),
-    ];
-
-    const result = game.playTurn(coordinate);
+    ]);
 
     if (result === "already") return;
 
     cell.classList.add(result);
     playSound(result === "hit" ? "hit" : "miss");
 
-    updateTurn(
-      game.isGameOver()
-        ? "Game Over"
-        : game.currentPlayer === game.player1
-        ? "Your Turn"
-        : "Enemy Turn"
-    );
-
     if (game.isGameOver()) {
       showWinnerModal(game);
       return;
     }
 
+    updateTurn("Enemy Turn");
+
     if (game.mode === "computer") {
       setTimeout(() => {
-        updateTurn("Enemy Turn");
+        game.playComputerTurn?.();
+        createBoard(document.querySelector("#your-board"), game.player1.gameboard, game.player1.name, false);
 
-        createBoard(
-          document.querySelector("#your-board"),
-          game.player1.gameboard,
-          game.player1.name,
-          false
-        );
-
-        if (game.isGameOver()) {
-          showWinnerModal(game);
-        } else {
-          updateTurn("Your Turn");
-        }
+        if (game.isGameOver()) showWinnerModal(game);
+        else updateTurn("Player Turn");
       }, 600);
     }
+  };
+}
+
+function connectBattleControls() {
+  document.querySelector("#quit-game")?.addEventListener("click", showQuitModal);
+
+  document.querySelector("#main-menu")?.addEventListener("click", returnToStart);
+  document.querySelector("#winner-main-menu")?.addEventListener("click", returnToStart);
+  document.querySelector("#play-again")?.addEventListener("click", returnToStart);
+  document.querySelector("#continue-game")?.addEventListener("click", () => {
+    document.querySelector("#quit-modal")?.classList.add("hidden");
   });
 }
 
-function updateTurn(text) {
-  const turn = document.querySelector("#turn-status");
-  if (turn) turn.textContent = text;
-}
-
-function connectBattleControls(game) {
-  const quitButton = document.querySelector("#quit-game");
-  quitButton?.addEventListener("click", () => {
-    showQuitModal();
-  });
-
-  document.querySelector("#main-menu")?.addEventListener("click", () => {
-    window.location.reload();
-  });
-
-  document.querySelector("#winner-main-menu")?.addEventListener("click", () => {
-    window.location.reload();
-  });
-
-  document.querySelector("#play-again")?.addEventListener("click", () => {
-    window.location.reload();
+function connectBackButtons() {
+  document.querySelectorAll(".back-btn").forEach((button) => {
+    button.onclick = () => {
+      const placement = document.querySelector("#placement-screen");
+      if (!placement?.classList.contains("hidden")) {
+        placement.classList.add("hidden");
+        document.querySelector("#mode-screen")?.classList.remove("hidden");
+      }
+    };
   });
 }
 
 function showQuitModal() {
-  const modal = document.querySelector("#quit-modal");
-  modal?.classList.remove("hidden");
+  document.querySelector("#quit-modal")?.classList.remove("hidden");
+}
+
+function returnToStart() {
+  window.location.reload();
 }
 
 function showWinnerModal(game) {
@@ -144,14 +121,16 @@ function showReadyModal(callback) {
   const modal = document.querySelector("#ready-modal");
   const button = document.querySelector("#start-battle");
 
-  if (!modal || !button) {
-    callback();
-    return;
-  }
+  if (!modal || !button) return callback();
 
   modal.classList.remove("hidden");
   button.onclick = () => {
     modal.classList.add("hidden");
     callback();
   };
+}
+
+function updateTurn(text) {
+  const turn = document.querySelector("#turn-status");
+  if (turn) turn.textContent = text;
 }
