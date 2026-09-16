@@ -115,6 +115,10 @@ function connectBattleControls(game) {
     window.location.reload();
   });
 
+  document.querySelector("#winner-main-menu")?.addEventListener("click", () => {
+    window.location.reload();
+  });
+
   document.querySelector("#play-again")?.addEventListener("click", () => {
     window.location.reload();
   });
