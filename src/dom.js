@@ -15,7 +15,7 @@ export function createPlacementBoard(boardElement, player, callback) {
 
 export function enableShipPlacement(boardElement, player, onReady) {
   let selectedShip = null;
-  let direction = "horizontal";
+  let direction = "vertical";
   let preview = null;
 
   const buttons = [...document.querySelectorAll(".ship-option")];
@@ -32,10 +32,9 @@ export function enableShipPlacement(boardElement, player, onReady) {
     };
   });
 
-  const rotate = document.querySelector(".rotate-ship");
-  rotate?.addEventListener("click", () => {
-    direction = direction === "horizontal" ? "vertical" : "horizontal";
-    if (preview) renderPreview(preview);
+  document.querySelector(".rotate-ship")?.addEventListener("click", () => {
+    direction = direction === "vertical" ? "horizontal" : "vertical";
+    if (preview) renderPreview(preview, boardElement, selectedShip, direction, player);
   });
 
   boardElement.querySelectorAll(".cell").forEach((cell) => {
@@ -60,8 +59,9 @@ export function enableShipPlacement(boardElement, player, onReady) {
   });
 
   document.querySelector(".confirm-placement")?.addEventListener("click", () => {
-    const ships = player.gameboard.ships || [];
-    const ready = ships.length === 5 && ships.reduce((sum, ship) => sum + ship.length, 0) === 17;
+    const ready = player.gameboard.isFleetReady
+      ? player.gameboard.isFleetReady()
+      : player.gameboard.ships.length === 5 && player.gameboard.ships.reduce((sum, ship) => sum + ship.length, 0) === 17;
     if (!ready) return showPlacementError();
     onReady?.();
   });
@@ -125,15 +125,16 @@ function renderShips(element, gameboard, hideShips) {
   if (hideShips) return;
   gameboard?.ships?.forEach((ship) => {
     ship.coordinates.forEach(([r, c]) => {
-      const cell = element.querySelector(`[data-row="${r}"][data-col="${c}"]`);
-      cell?.classList.add("occupied");
+      element.querySelector(`[data-row="${r}"][data-col="${c}"]`)?.classList.add("occupied");
     });
+
     const first = element.querySelector(`[data-row="${ship.coordinates[0][0]}"][data-col="${ship.coordinates[0][1]}"]`);
     if (!first) return;
+
     const img = document.createElement("img");
     img.src = shipImages[ship.name];
-    img.className = `ship-image ${ship.direction || "horizontal"}`;
-    img.style.width = `${ship.length * 38}px`;
+    img.className = `ship-image ${ship.direction || "vertical"}`;
+    img.style.setProperty("--ship-length", ship.length);
     first.appendChild(img);
   });
 }
