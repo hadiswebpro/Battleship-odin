@@ -49,14 +49,14 @@ body{min-height:100vh;margin:0;font-family:"Segoe UI",sans-serif;color:white;ove
 @keyframes anchorSwing{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
 @keyframes floatIn{from{opacity:0;transform:scale(.9)}}
 @media(max-width:700px){
- :root{--cell:min(8.2vw,30px);--board:calc(var(--cell)*10)}
+ :root{--cell:min(4.3vw,30px);--board:calc(var(--cell)*10)}
  body{overflow:hidden}
  .main-menu-card{flex-direction:column-reverse;width:95vw;min-height:0;padding:18px;gap:12px}
  .main-ship-image{width:48vw;max-height:35vh}
  .placement-screen,.game-screen{padding:8px}
  .placement-layout{gap:4px}
  .placement-heading h2{font-size:1.55rem}
- .placement-card{padding:8px 10px;gap:5px;border-radius:18px}
+ .placement-card{padding:8px 10px;gap:5px}
  .ship-selector{gap:4px;margin-bottom:0}
  .ship-option{padding:6px 9px;font-size:.72rem}
  .confirm-placement{padding:7px 18px;font-size:.85rem}
@@ -67,12 +67,4 @@ body{min-height:100vh;margin:0;font-family:"Segoe UI",sans-serif;color:white;ove
  .battle-title{font-size:clamp(1.6rem,7vw,2.4rem)}
  #turn-status{font-size:.8rem;margin-bottom:2px}
  .back-btn{top:8px;left:8px;padding:6px 12px;font-size:.75rem}
-}
-@media(min-width:701px) and (max-height:800px){
- :root{--cell:34px;--board:340px}
- .placement-card{padding:10px 14px}
- .ship-selector{gap:5px}
- .ship-option{padding:6px 12px}
- .confirm-placement{padding:8px 22px}
- .game-layout{transform:translateY(-8px)}
 }
