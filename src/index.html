@@ -28,9 +28,17 @@
 <section id="placement-screen" class="hidden placement-screen">
   <button id="placement-back" class="back-btn">← Back</button>
   <div class="placement-layout"><div class="placement-heading"><h2>Place Your Ships <span class="ship-wave">🚢</span></h2><p id="placement-error" class="hidden" aria-live="polite"></p></div>
-    <div class="card placement-card"><div class="ship-selector">
-      <button class="ship-option" data-ship="Carrier" data-length="5">Carrier (5)</button><button class="ship-option" data-ship="Battleship" data-length="4">Battleship (4)</button><button class="ship-option" data-ship="Cruiser" data-length="3">Cruiser (3)</button><button class="ship-option" data-ship="Submarine" data-length="3">Submarine (3)</button><button class="ship-option" data-ship="Destroyer" data-length="2">Destroyer (2)</button>
-    </div><div id="player-board"></div></div>
+    <div class="card placement-card">
+      <div class="ship-selector">
+        <div class="ship-side ship-side-left">
+          <button class="ship-option" data-ship="Carrier" data-length="5">Carrier (5)</button><button class="ship-option" data-ship="Battleship" data-length="4">Battleship (4)</button><button class="ship-option" data-ship="Cruiser" data-length="3">Cruiser (3)</button>
+        </div>
+        <div class="ship-side ship-side-right">
+          <button class="ship-option" data-ship="Submarine" data-length="3">Submarine (3)</button><button class="ship-option" data-ship="Destroyer" data-length="2">Destroyer (2)</button>
+        </div>
+      </div>
+      <div id="player-board"></div>
+    </div>
     <div class="placement-actions"><button id="confirm-placement" class="confirm-placement">Start Game</button></div>
   </div>
 </section>
