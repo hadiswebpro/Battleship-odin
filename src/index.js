@@ -16,6 +16,14 @@ const SCREEN_DELAY = 120;
 
 if (shipImage) shipImage.src = mainShipImage;
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch((error) => {
+      console.error("Service Worker registration failed:", error);
+    });
+  });
+}
+
 function showScreen(screen) {
   if (!screen) return;
   screen.classList.remove("hidden");
