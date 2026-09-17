@@ -70,11 +70,13 @@ body {
  width:38px;
  height:calc(38px * var(--ship-length));
  object-fit:fill;
- pointer-events:none;
+ pointer-events:auto;
+ cursor:grab;
  z-index:2;
  transform-origin:top left;
 }
 
+.ship-image:active {cursor:grabbing;}
 .ship-image.horizontal {transform:rotate(90deg) translateY(-100%);}
 
 .back-btn {position:fixed;top:20px;left:20px;z-index:20;background:#36c5ff;color:white;border:none;padding:10px 22px;border-radius:30px;font-weight:bold;cursor:pointer;box-shadow:0 5px 20px rgba(0,168,232,.4);}
