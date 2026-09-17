@@ -586,10 +586,15 @@ body {
 /*!**************************************!*\
   !*** css ./src/mobile-landscape.css ***!
   \**************************************/
-/* Mobile + tablet responsive layout */
+/* =========================================================
+   Responsive phone + tablet UI
+   Portrait = normal vertical page
+   Landscape = compact horizontal game layout
+   ========================================================= */
 
-/* Portrait phones and tablets: use the screen width for a comfortable board,
-   allow vertical scrolling, and stack the battle boards. */
+/* =========================
+   PORTRAIT — PHONE + TABLET
+   ========================= */
 @media (orientation: portrait) {
   body {
     overflow-x: hidden;
@@ -597,37 +602,36 @@ body {
   }
 
   .placement-screen,
-  .game-screen {
+  .game-screen,
+  .main-menu,
+  .player-selection {
     min-height: 100svh;
     height: auto;
+    padding: 58px 5vw 24px;
     overflow: visible;
-    padding: 14px 10px 24px;
     align-items: flex-start;
   }
 
-  .placement-layout,
-  .game-layout {
-    width: 100%;
-    max-width: 760px;
-    min-height: calc(100svh - 38px);
-    transform: none;
-  }
-
+  /* -------- Place Ships -------- */
   .placement-layout {
+    position: relative;
+    width: 100%;
+    min-height: calc(100svh - 82px);
+    justify-content: flex-start;
     gap: 10px;
   }
 
   .placement-heading {
-    margin-bottom: 4px;
+    margin: 0 0 4px;
   }
 
   .placement-heading h2 {
-    font-size: clamp(1.5rem, 6vw, 2.4rem);
+    font-size: clamp(1.45rem, 6vw, 2.2rem);
   }
 
   .placement-card {
-    width: 100%;
-    max-width: 100%;
+    width: 90vw;
+    max-width: 90vw;
     padding: 10px;
     gap: 10px;
   }
@@ -638,78 +642,111 @@ body {
   }
 
   .ship-option {
-    padding: 7px 10px;
-    font-size: clamp(.7rem, 2.5vw, .9rem);
+    padding: 7px 9px;
+    font-size: clamp(.68rem, 2.2vw, .85rem);
   }
 
-  /* Placement board: large enough to interact with comfortably in portrait. */
-  #placement-screen #player-board,
-  #placement-screen .board {
-    --cell: min(8.2vw, 46px);
+  /* 90% of phone/tablet width for the placement board. */
+  #placement-screen #player-board {
+    --cell: min(8.5vw, 52px);
     --board: calc(var(--cell) * 10);
+    width: var(--board);
+    height: var(--board);
+    flex: 0 0 auto;
   }
 
   .placement-actions {
     margin-top: 2px;
   }
 
+  /* -------- Battle -------- */
   .game-screen {
-    padding-top: 52px;
+    min-height: 100svh;
+    padding: 58px 10px 20px;
   }
 
   .game-layout {
-    gap: 8px;
+    width: 100%;
+    max-width: none;
+    transform: none;
+    gap: 4px;
   }
 
   .battle-title {
-    font-size: clamp(1.8rem, 7vw, 3rem);
+    font-size: clamp(1.65rem, 7vw, 2.5rem);
   }
 
   #turn-status {
-    font-size: clamp(.8rem, 3vw, 1.1rem);
-    margin-bottom: 4px;
+    font-size: clamp(.75rem, 3vw, 1rem);
+    margin: 0 0 3px;
   }
 
+  /* Two boards UNDER each other. Size is capped by viewport height so both
+     can be seen in one screen whenever the device is tall enough. */
   .battle-boards {
     width: 100%;
     flex-direction: column;
-    gap: 16px;
+    flex-wrap: nowrap;
+    gap: 8px;
   }
 
   .board-panel {
     width: fit-content;
     max-width: 100%;
-    padding: 8px;
+    padding: 6px;
+    border-radius: 12px;
   }
 
   .board-panel h3 {
-    font-size: clamp(.75rem, 3vw, 1rem);
-    margin-bottom: 5px;
+    margin-bottom: 3px;
+    font-size: clamp(.68rem, 2.5vw, .85rem);
   }
 
-  /* Both battle boards are intentionally stacked and nearly screen-width. */
-  #your-board .board,
-  #enemy-board .board {
-    --cell: min(8.2vw, 46px);
+  /* Around 70vw, but also shrink when two boards would otherwise exceed the
+     available vertical space. */
+  .game-screen #your-board .board,
+  .game-screen #enemy-board .board {
+    --cell: min(7vw, 44px, calc((100svh - 180px) / 20));
     --board: calc(var(--cell) * 10);
+    width: var(--board);
+    height: var(--board);
   }
 
   .back-btn {
-    top: 8px;
-    left: 8px;
-    padding: 7px 13px;
-    font-size: .75rem;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 60;
+    padding: 7px 14px;
+    font-size: .78rem;
+  }
+
+  /* Keep the main menu/mode screens comfortable too. */
+  .main-menu-card {
+    width: 92vw;
+    min-height: 0;
+    padding: 18px;
+  }
+
+  .main-ship-image {
+    width: 52vw;
+    max-height: 32svh;
+  }
+
+  .mode-buttons {
+    gap: 8px;
+  }
+
+  .player-card {
+    width: 43vw;
+    padding: 12px 8px;
   }
 }
 
-/* Small landscape phones: calculate the board from the available HEIGHT and
-   WIDTH so the entire battle scene fits without clipping or vertical scroll. */
+/* =========================
+   LANDSCAPE — PHONE + TABLET
+   ========================= */
 @media (orientation: landscape) {
-  :root {
-    --cell: min(30px, calc((100vw - 44px) / 20), calc((100vh - 96px) / 10));
-    --board: calc(var(--cell) * 10);
-  }
-
   body {
     overflow: hidden;
   }
@@ -718,149 +755,254 @@ body {
   .game-screen,
   .main-menu,
   .player-selection {
+    width: 100%;
     min-height: 100svh;
     height: 100svh;
-    padding: 6px 10px;
+    padding: 0;
     overflow: hidden;
+  }
+
+  /* -------- Place Ships --------
+     Board is centered. The 5 ship buttons live around its left/right sides.
+     Nothing is removed from the UI. */
+  .placement-layout {
+    position: relative;
+    width: 100vw;
+    height: 100svh;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .placement-heading {
+    position: absolute;
+    top: 3svh;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    z-index: 10;
+    white-space: nowrap;
+  }
+
+  .placement-heading h2 {
+    font-size: clamp(1.1rem, 4.5vh, 2rem);
+  }
+
+  /* Square area around the centered board. */
+  .placement-card {
+    position: relative;
+    width: min(90vw, 86svh);
+    height: min(90vw, 86svh);
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  .placement-card #player-board {
+    --cell: min(8.1vw, 7.2svh, 44px);
+    --board: calc(var(--cell) * 10);
+    width: var(--board);
+    height: var(--board);
+    flex: 0 0 auto;
+  }
+
+  /* 3 buttons left + 2 buttons right. */
+  .placement-card .ship-selector {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+    pointer-events: none;
+  }
+
+  .placement-card .ship-option {
+    position: absolute;
+    width: max-content;
+    max-width: 18vw;
+    padding: 6px 9px;
+    font-size: clamp(.56rem, 1.7vw, .78rem);
+    pointer-events: auto;
+  }
+
+  .placement-card .ship-option:nth-child(1) {
+    left: -1vw;
+    top: 16%;
+  }
+
+  .placement-card .ship-option:nth-child(2) {
+    left: -1vw;
+    top: 43%;
+  }
+
+  .placement-card .ship-option:nth-child(3) {
+    left: -1vw;
+    top: 70%;
+  }
+
+  .placement-card .ship-option:nth-child(4) {
+    right: -1vw;
+    top: 30%;
+  }
+
+  .placement-card .ship-option:nth-child(5) {
+    right: -1vw;
+    top: 60%;
+  }
+
+  #placement-error {
+    position: absolute;
+    top: 3.5svh;
+    left: 50%;
+    transform: translateX(-50%) translateY(3.5svh);
+    margin: 0;
+    z-index: 10;
+    white-space: nowrap;
+  }
+
+  /* Back = top-left, Start = bottom-right. */
+  .back-btn {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 60;
+    padding: 7px 14px;
+    font-size: .78rem;
+  }
+
+  .placement-actions {
+    position: fixed;
+    right: 14px;
+    bottom: 12px;
+    z-index: 60;
+    margin: 0;
+  }
+
+  .confirm-placement {
+    padding: 7px 16px;
+    font-size: clamp(.68rem, 2.1vw, .88rem);
+  }
+
+  /* -------- Battle -------- */
+  .game-screen {
+    padding: 0 10px;
   }
 
   .game-layout {
     width: 100%;
-    gap: 2px;
+    height: 100svh;
     transform: none;
+    justify-content: center;
+    gap: 2px;
   }
 
   .battle-title {
-    font-size: clamp(1.2rem, 5vh, 2.2rem);
-    line-height: .95;
+    font-size: clamp(1.2rem, 5svh, 2.1rem);
   }
 
   #turn-status {
-    font-size: clamp(.65rem, 2.2vh, .95rem);
+    font-size: clamp(.62rem, 2.4svh, .9rem);
     margin: 0 0 2px;
   }
 
   .battle-boards {
-    width: 100%;
-    gap: clamp(5px, 2vw, 18px);
+    width: auto;
+    gap: clamp(8px, 2vw, 22px);
     flex-wrap: nowrap;
   }
 
   .board-panel {
-    padding: clamp(4px, 1vh, 8px);
-    border-radius: 12px;
+    padding: 5px;
+    border-radius: 10px;
   }
 
   .board-panel h3 {
-    font-size: clamp(.58rem, 2vh, .85rem);
     margin-bottom: 2px;
+    font-size: clamp(.56rem, 2svh, .8rem);
   }
 
-  /* Keep the complete board visible: desktop proportions, simply scaled down. */
   .game-screen #your-board .board,
-  .game-screen #enemy-board .board,
-  #placement-screen #player-board .board {
-    --cell: min(30px, calc((100vw - 44px) / 20), calc((100vh - 96px) / 10));
+  .game-screen #enemy-board .board {
+    --cell: min(8.8vw, 8svh, 43px);
     --board: calc(var(--cell) * 10);
+    width: var(--board);
+    height: var(--board);
   }
+}
 
-  .back-btn {
-    top: 5px;
-    left: 7px;
-    padding: 5px 11px;
-    font-size: .7rem;
-  }
-
-  .placement-layout {
-    width: 100%;
-    gap: 2px;
-    justify-content: center;
-  }
-
+/* Very short landscape phones. */
+@media (orientation: landscape) and (max-height: 500px) {
   .placement-heading {
-    margin-bottom: 3px;
+    top: 1.5svh;
   }
 
   .placement-heading h2 {
-    font-size: clamp(1.1rem, 4.5vh, 1.9rem);
+    font-size: clamp(.95rem, 4svh, 1.45rem);
   }
 
   .placement-card {
-    max-width: 96vw;
-    padding: 5px 9px;
-    gap: 3px;
+    width: min(88vw, 88svh);
+    height: min(88vw, 88svh);
   }
 
-  .ship-selector {
-    gap: 3px;
-    max-width: 96vw;
+  .placement-card #player-board {
+    --cell: min(7.6vw, 7svh, 34px);
   }
 
-  .ship-option {
+  .placement-card .ship-option {
     padding: 4px 7px;
-    font-size: clamp(.55rem, 1.8vh, .72rem);
+    font-size: .56rem;
+  }
+
+  .placement-actions {
+    right: 9px;
+    bottom: 7px;
   }
 
   .confirm-placement {
-    padding: 6px 17px;
-    font-size: clamp(.7rem, 2vh, .9rem);
+    padding: 5px 11px;
+    font-size: .65rem;
   }
 
-  #placement-error {
-    font-size: .62rem;
-  }
-}
-
-/* Larger tablets in landscape: still scale to the available viewport instead
-   of keeping desktop-sized boards. */
-@media (orientation: landscape) and (min-width: 701px) and (min-height: 701px) {
-  :root {
-    --cell: min(38px, calc((100vw - 100px) / 20), calc((100vh - 150px) / 10));
-    --board: calc(var(--cell) * 10);
-  }
-
-  .game-screen,
-  .placement-screen {
-    padding: 10px 20px;
+  .back-btn {
+    top: 7px;
+    left: 7px;
+    padding: 5px 10px;
+    font-size: .65rem;
   }
 
   .game-screen #your-board .board,
-  .game-screen #enemy-board .board,
-  #placement-screen #player-board .board {
-    --cell: min(38px, calc((100vw - 100px) / 20), calc((100vh - 150px) / 10));
-    --board: calc(var(--cell) * 10);
-  }
-
-  .battle-boards {
-    gap: clamp(12px, 3vw, 30px);
+  .game-screen #enemy-board .board {
+    --cell: min(7.4vw, 7svh, 34px);
   }
 }
 
-/* Very short landscape screens: give the boards maximum priority. */
-@media (orientation: landscape) and (max-height: 430px) {
-  .game-screen,
-  .placement-screen {
-    padding-top: 4px;
-    padding-bottom: 4px;
+/* Tablet portrait: same design, with a larger board while preserving the
+   stacked battle layout. */
+@media (orientation: portrait) and (min-width: 701px) {
+  .placement-card {
+    width: 90vw;
+    max-width: 90vw;
+    padding: 14px;
   }
 
-  .game-layout {
-    gap: 0;
-  }
-
-  .battle-title {
-    font-size: clamp(1rem, 4.5vh, 1.65rem);
-  }
-
-  #turn-status {
-    font-size: clamp(.55rem, 2vh, .75rem);
+  #placement-screen #player-board {
+    --cell: min(8.5vw, 62px);
   }
 
   .game-screen #your-board .board,
-  .game-screen #enemy-board .board,
-  #placement-screen #player-board .board {
-    --cell: min(28px, calc((100vw - 40px) / 20), calc((100vh - 62px) / 10));
-    --board: calc(var(--cell) * 10);
+  .game-screen #enemy-board .board {
+    --cell: min(7vw, 50px, calc((100svh - 200px) / 20));
   }
 }
 
