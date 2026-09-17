@@ -28,6 +28,10 @@ export function startGameFlow(mode = "computer", existingGame = null) {
   quitModal?.classList.add("hidden");
   exitModal?.classList.add("hidden");
 
+  document.querySelectorAll(".ship-option").forEach((button) => {
+    button.classList.remove("placed", "active");
+  });
+
   playMusic("placement");
   createPlacementBoard(playerBoard, game.player1, () => showReadyModal(() => startBattle(game)));
   connectBackButtons();
@@ -48,7 +52,6 @@ function startBattle(game) {
 
   createBoard(yourBoard, game.player1.gameboard, game.player1.name, false);
   createBoard(enemyBoard, game.player2.gameboard, game.player2.name, true);
-
   connectEnemyBoard(game);
   connectBattleControls();
   updateTurn("Player Turn");
@@ -81,7 +84,6 @@ function connectEnemyBoard(game) {
       computerTimer = setTimeout(() => {
         const computerResult = game.computerTurn();
         createBoard(document.querySelector("#your-board"), game.player1.gameboard, game.player1.name, false);
-
         if (computerResult) playSound(computerResult === "hit" ? "hit" : "miss");
 
         if (game.isGameOver()) {
@@ -102,7 +104,6 @@ function connectBattleControls() {
   const restart = document.querySelector("#play-again");
   const winnerMenu = document.querySelector("#winner-main-menu");
   const winnerStay = document.querySelector("#winner-cancel");
-
   if (quit) quit.onclick = showQuitModal;
   if (continueButton) continueButton.onclick = hideQuitModal;
   if (mainMenu) mainMenu.onclick = returnToStart;
@@ -114,7 +115,6 @@ function connectBattleControls() {
 function connectBackButtons() {
   const placementBack = document.querySelector("#placement-back");
   if (placementBack) placementBack.onclick = showExitModal;
-
   const modeBack = document.querySelector("#mode-back");
   if (modeBack) modeBack.onclick = returnToStart;
 }
@@ -142,25 +142,11 @@ function showReadyModal(callback) {
   if (cancelButton) cancelButton.onclick = () => modal.classList.add("hidden");
 }
 
-function showExitModal() {
-  document.querySelector("#exit-modal")?.classList.remove("hidden");
-}
-
-function hideExitModal() {
-  document.querySelector("#exit-modal")?.classList.add("hidden");
-}
-
-function showQuitModal() {
-  document.querySelector("#quit-modal")?.classList.remove("hidden");
-}
-
-function hideQuitModal() {
-  document.querySelector("#quit-modal")?.classList.add("hidden");
-}
-
-function hideWinnerModal() {
-  document.querySelector("#winner-modal")?.classList.add("hidden");
-}
+function showExitModal() { document.querySelector("#exit-modal")?.classList.remove("hidden"); }
+function hideExitModal() { document.querySelector("#exit-modal")?.classList.add("hidden"); }
+function showQuitModal() { document.querySelector("#quit-modal")?.classList.remove("hidden"); }
+function hideQuitModal() { document.querySelector("#quit-modal")?.classList.add("hidden"); }
+function hideWinnerModal() { document.querySelector("#winner-modal")?.classList.add("hidden"); }
 
 function returnToStart() {
   clearTimeout(computerTimer);
@@ -171,9 +157,7 @@ function returnToStart() {
 function restartGame() {
   clearTimeout(computerTimer);
   const mode = activeGame?.mode || "computer";
-  const freshGame = new Game(mode);
-  activeGame = freshGame;
-  startGameFlow(mode, freshGame);
+  startGameFlow(mode, new Game(mode));
 }
 
 function showWinnerModal(game) {
