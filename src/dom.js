@@ -33,12 +33,30 @@ export function enableShipPlacement(boardElement, player, onReady) {
     };
   });
 
-  document.querySelector(".rotate-ship")?.addEventListener("click", () => {
-    direction = direction === "vertical" ? "horizontal" : "vertical";
-    if (preview && selectedShip) {
-      renderPreview(preview, boardElement, selectedShip, direction, player);
-    }
-  });
+  const rotateButton = document.querySelector(".rotate-ship");
+  if (rotateButton) {
+    rotateButton.onclick = () => {
+      direction = direction === "vertical" ? "horizontal" : "vertical";
+      if (preview && selectedShip) {
+        renderPreview(preview, boardElement, selectedShip, direction, player);
+      }
+    };
+  }
+
+  const confirmButton = document.querySelector("#confirm-placement");
+  if (confirmButton) {
+    confirmButton.onclick = () => {
+      const ready = player.gameboard.ships.length === 5 &&
+        player.gameboard.ships.reduce((sum, ship) => sum + ship.length, 0) === 17;
+
+      if (!ready) {
+        showPlacementError();
+        return;
+      }
+
+      onReady?.();
+    };
+  }
 
   boardElement.querySelectorAll(".cell").forEach((cell) => {
     cell.onmouseenter = () => {
@@ -70,22 +88,24 @@ export function enableShipPlacement(boardElement, player, onReady) {
     cell.ondragover = (event) => {
       if (!draggedShip) return;
       event.preventDefault();
+      event.dataTransfer.dropEffect = "move";
+
       const ship = draggedShip.ship;
-      const coords = getCoordinates(
-        +cell.dataset.row,
-        +cell.dataset.col,
-        ship.length,
-        ship.direction || "vertical",
-      );
-      if (!coords) return;
+      const row = Number(cell.dataset.row);
+      const col = Number(cell.dataset.col);
+      const shipDirection = ship.direction || "vertical";
+      const coordinates = getCoordinates(row, col, ship.length, shipDirection);
+
       renderPreview(
-        { row: +cell.dataset.row, col: +cell.dataset.col },
+        { row, col },
         boardElement,
         { name: ship.name, length: ship.length },
-        ship.direction || "vertical",
+        shipDirection,
         player,
         ship,
       );
+
+      if (!coordinates) clearPreview(boardElement);
     };
 
     cell.ondrop = (event) => {
@@ -94,8 +114,8 @@ export function enableShipPlacement(boardElement, player, onReady) {
 
       const ship = draggedShip.ship;
       const coordinates = getCoordinates(
-        +cell.dataset.row,
-        +cell.dataset.col,
+        Number(cell.dataset.row),
+        Number(cell.dataset.col),
         ship.length,
         ship.direction || "vertical",
       );
@@ -135,15 +155,6 @@ export function enableShipPlacement(boardElement, player, onReady) {
       draggedShip = null;
       clearPreview(boardElement);
     };
-  });
-
-  document.querySelector(".confirm-placement")?.addEventListener("click", () => {
-    const ready = player.gameboard.isFleetReady
-      ? player.gameboard.isFleetReady()
-      : player.gameboard.ships.length === 5 &&
-        player.gameboard.ships.reduce((sum, ship) => sum + ship.length, 0) === 17;
-    if (!ready) return showPlacementError();
-    onReady?.();
   });
 }
 
