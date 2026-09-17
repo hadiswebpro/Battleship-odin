@@ -1,5 +1,5 @@
 import Game from "./game";
-import { createBoard, createPlacementBoard, playSound } from "./dom";
+import { createBoard, createPlacementBoard, playMusic, playSound, stopMusic } from "./dom";
 
 let activeGame = null;
 let computerTimer = null;
@@ -16,6 +16,7 @@ export function startGameFlow(mode = "computer", existingGame = null) {
   const readyModal = document.querySelector("#ready-modal");
   const winnerModal = document.querySelector("#winner-modal");
   const quitModal = document.querySelector("#quit-modal");
+  const exitModal = document.querySelector("#exit-modal");
 
   if (!playerBoard || !placementScreen) return game;
 
@@ -25,7 +26,9 @@ export function startGameFlow(mode = "computer", existingGame = null) {
   readyModal?.classList.add("hidden");
   winnerModal?.classList.add("hidden");
   quitModal?.classList.add("hidden");
+  exitModal?.classList.add("hidden");
 
+  playMusic("placement");
   createPlacementBoard(playerBoard, game.player1, () => showReadyModal(() => startBattle(game)));
   connectBackButtons();
   connectGlobalExitControls();
@@ -41,6 +44,7 @@ function startBattle(game) {
 
   placementScreen?.classList.add("hidden");
   gameScreen.classList.remove("hidden");
+  playMusic("battle");
 
   createBoard(yourBoard, game.player1.gameboard, game.player1.name, false);
   createBoard(enemyBoard, game.player2.gameboard, game.player2.name, true);
@@ -48,7 +52,6 @@ function startBattle(game) {
   connectEnemyBoard(game);
   connectBattleControls();
   updateTurn("Player Turn");
-  playSound("ocean");
 }
 
 function connectEnemyBoard(game) {
@@ -63,7 +66,7 @@ function connectEnemyBoard(game) {
     const result = game.attack(coordinate);
     if (result === "already") return;
 
-    createBoard(document.querySelector("#enemy-board"), game.player2.gameboard, game.player2.name, true);
+    createBoard(board, game.player2.gameboard, game.player2.name, true);
     playSound(result === "hit" ? "hit" : "miss");
 
     if (game.isGameOver()) {
@@ -161,6 +164,7 @@ function hideWinnerModal() {
 
 function returnToStart() {
   clearTimeout(computerTimer);
+  stopMusic();
   window.location.reload();
 }
 
@@ -179,7 +183,6 @@ function showWinnerModal(game) {
   if (!modal || !text || !winner) return;
   text.textContent = `${winner.name} wins!`;
   modal.classList.remove("hidden");
-  playSound("victory");
 }
 
 function updateTurn(text) {
