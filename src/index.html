@@ -1,55 +1,29 @@
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#001e3c">
 <body>
 <section id="start-screen" class="main-menu">
   <div class="card main-menu-card">
-    <div class="hero-content">
-      <h1 class="game-title">⚓ Battleship</h1>
-      <p class="subtitle">Sink the enemy fleet</p>
-      <button id="start-game" class="primary-btn">Start Game</button>
-    </div>
+    <div class="hero-content"><h1 class="game-title">⚓ Battleship</h1><p class="subtitle">Sink the enemy fleet</p><button id="start-game" class="primary-btn">Start Game</button></div>
     <img class="main-ship-image" alt="Battleship ship">
   </div>
 </section>
 <section id="mode-screen" class="hidden player-selection">
   <button id="mode-back" class="back-btn">← Back</button>
-  <div class="mode-layout">
-    <h2 class="screen-heading wave-heading">Choose Opponent</h2>
-    <div class="mode-buttons">
-      <div class="card player-card"><h3>👥 Player vs Player</h3><button id="player-mode" class="primary-btn">Select</button></div>
-      <div class="card player-card"><h3>🤖 Player vs Computer</h3><button id="computer-mode" class="primary-btn">Select</button></div>
-    </div>
-  </div>
+  <div class="mode-layout"><h2 class="screen-heading wave-heading">Choose Opponent</h2><div class="mode-buttons">
+    <div class="card player-card"><h3>👥 Player vs Player</h3><button id="player-mode" class="primary-btn">Select</button></div>
+    <div class="card player-card"><h3>🤖 Player vs Computer</h3><button id="computer-mode" class="primary-btn">Select</button></div>
+  </div></div>
 </section>
 <section id="placement-screen" class="hidden placement-screen">
   <button id="placement-back" class="back-btn">← Back</button>
-  <div class="placement-layout">
-    <div class="placement-heading">
-      <h2>Place Your Ships <span class="ship-wave">🚢</span></h2>
-      <p id="placement-error" class="hidden" aria-live="polite"></p>
-    </div>
-    <div class="card placement-card">
-      <div class="ship-selector">
-        <button class="ship-option" data-ship="Carrier" data-length="5">Carrier (5)</button>
-        <button class="ship-option" data-ship="Battleship" data-length="4">Battleship (4)</button>
-        <button class="ship-option" data-ship="Cruiser" data-length="3">Cruiser (3)</button>
-        <button class="ship-option" data-ship="Submarine" data-length="3">Submarine (3)</button>
-        <button class="ship-option" data-ship="Destroyer" data-length="2">Destroyer (2)</button>
-      </div>
-      <div id="player-board"></div>
-    </div>
+  <div class="placement-layout"><div class="placement-heading"><h2>Place Your Ships <span class="ship-wave">🚢</span></h2><p id="placement-error" class="hidden" aria-live="polite"></p></div>
+    <div class="card placement-card"><div class="ship-selector">
+      <button class="ship-option" data-ship="Carrier" data-length="5">Carrier (5)</button><button class="ship-option" data-ship="Battleship" data-length="4">Battleship (4)</button><button class="ship-option" data-ship="Cruiser" data-length="3">Cruiser (3)</button><button class="ship-option" data-ship="Submarine" data-length="3">Submarine (3)</button><button class="ship-option" data-ship="Destroyer" data-length="2">Destroyer (2)</button>
+    </div><div id="player-board"></div></div>
     <div class="placement-actions"><button id="confirm-placement" class="confirm-placement">Start Game</button></div>
   </div>
 </section>
-<section id="game" class="hidden game-screen">
-  <button id="quit-game" class="back-btn">← Quit Game</button>
-  <div class="game-layout">
-    <h1 class="battle-title"><span class="anchor-icon">⚓</span> Battleship</h1>
-    <p id="turn-status">Player Turn</p>
-    <div class="battle-boards">
-      <div class="board-panel"><h3>Your Fleet</h3><div id="your-board"></div></div>
-      <div class="board-panel"><h3>Enemy Fleet</h3><div id="enemy-board"></div></div>
-    </div>
-  </div>
-</section>
+<section id="game" class="hidden game-screen"><button id="quit-game" class="back-btn">← Quit Game</button><div class="game-layout"><h1 class="battle-title"><span class="anchor-icon">⚓</span> Battleship</h1><p id="turn-status">Player Turn</p><div class="battle-boards"><div class="board-panel"><h3>Your Fleet</h3><div id="your-board"></div></div><div class="board-panel"><h3>Enemy Fleet</h3><div id="enemy-board"></div></div></div></div></section>
 <div id="ready-modal" class="hidden modal-overlay"><div class="card modal-card"><h2>Ready for Battle?</h2><p>Your fleet is ready. Start the battle?</p><div class="modal-actions"><button id="cancel-ready" class="primary-btn">Cancel</button><button id="start-battle" class="primary-btn">Start Battle</button></div></div></div>
 <div id="exit-modal" class="hidden modal-overlay"><div class="card modal-card"><h2>Leave Game?</h2><p>Your current fleet and game progress will be lost. Are you sure you want to leave?</p><div class="modal-actions"><button id="cancel-exit" class="primary-btn">Cancel</button><button id="confirm-exit" class="primary-btn">Yes, Leave</button></div></div></div>
 <div id="quit-modal" class="hidden modal-overlay"><div class="card modal-card"><h2>Quit Game?</h2><p>Are you sure you want to leave the battle?</p><div class="modal-actions"><button id="continue-game" class="primary-btn">Continue</button><button id="main-menu" class="primary-btn">Main Menu</button></div></div></div>
