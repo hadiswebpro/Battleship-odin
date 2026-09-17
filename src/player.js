@@ -27,7 +27,6 @@ export default class Player {
 
     for (const { name, length } of this.fleet) {
       let placed = false;
-
       while (!placed) {
         try {
           this.placeShip(length, this.generateCoordinates(length), name);
@@ -51,7 +50,6 @@ export default class Player {
     for (let i = 0; i < length; i++) {
       const r = horizontal ? row : row + i;
       const c = horizontal ? col + i : col;
-
       if (r > 9 || c > 9) return this.generateCoordinates(length);
       coordinates.push([r, c]);
     }
@@ -65,14 +63,12 @@ export default class Player {
 
   attack(enemyBoard, coordinate) {
     if (this.attacksMade.has(coordinate.toString())) return "already";
-
     this.attacksMade.add(coordinate.toString());
     return enemyBoard.receiveAttack(coordinate);
   }
 
   computerAttack(enemyBoard) {
     let coordinate;
-
     do {
       coordinate = this.targetQueue.shift() || [
         Math.floor(Math.random() * 10),
@@ -81,13 +77,9 @@ export default class Player {
     } while (this.attacksMade.has(coordinate.toString()));
 
     this.attacksMade.add(coordinate.toString());
-
     const result = enemyBoard.receiveAttack(coordinate);
 
-    if (result === "hit") {
-      this.addTargetsAround(coordinate);
-    }
-
+    if (result === "hit") this.addTargetsAround(coordinate);
     return result;
   }
 
@@ -100,10 +92,7 @@ export default class Player {
     ].forEach(([r, c]) => {
       if (r >= 0 && r < 10 && c >= 0 && c < 10) {
         const key = [r, c].toString();
-
-        if (!this.attacksMade.has(key)) {
-          this.targetQueue.push([r, c]);
-        }
+        if (!this.attacksMade.has(key)) this.targetQueue.push([r, c]);
       }
     });
   }
