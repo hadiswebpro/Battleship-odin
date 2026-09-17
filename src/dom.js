@@ -15,20 +15,25 @@ const audioFiles = {
   victory: new URL("./audio/victory.mp3", import.meta.url).href,
 };
 
-let currentMusic = null;
+const audioPool = Object.fromEntries(
+  Object.entries(audioFiles).map(([name, src]) => {
+    const audio = new Audio(src);
+    audio.preload = "auto";
+    return [name, audio];
+  })
+);
 
-function createAudio(src, loop = false) {
-  const audio = new Audio(src);
-  audio.loop = loop;
-  audio.volume = 0.35;
-  return audio;
-}
+let currentMusic = null;
 
 export function playMusic(name) {
   stopMusic();
-  const src = audioFiles[name];
-  if (!src) return;
-  currentMusic = createAudio(src, true);
+  const music = audioPool[name];
+  if (!music) return;
+
+  currentMusic = music;
+  currentMusic.loop = true;
+  currentMusic.currentTime = 0;
+  currentMusic.volume = 0.35;
   currentMusic.play().catch(() => {});
 }
 
@@ -36,17 +41,20 @@ export function stopMusic() {
   if (!currentMusic) return;
   currentMusic.pause();
   currentMusic.currentTime = 0;
+  currentMusic.loop = false;
   currentMusic = null;
 }
 
 export function playSound(name) {
-  const src = audioFiles[name];
-  if (!src) return;
-  const sound = createAudio(src);
+  const source = audioPool[name];
+  if (!source) return;
+
+  const sound = source.cloneNode(true);
+  sound.preload = "auto";
   sound.loop = false;
   sound.volume = 0.45;
+  sound.currentTime = 0;
   sound.play().catch(() => {});
-  sound.addEventListener("ended", () => sound.remove());
 }
 
 export function enableButtonSounds() {
