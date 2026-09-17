@@ -39,4 +39,47 @@
     </div>
   </div>
 </section>
+
+<section id="game" class="hidden game-screen">
+  <div class="card game-card">
+    <h2>⚓ Battleship</h2>
+    <p id="turn-status">Player Turn</p>
+    <div class="battle-boards">
+      <div class="board-panel">
+        <h3>Your Fleet</h3>
+        <div id="your-board"></div>
+      </div>
+      <div class="board-panel">
+        <h3>Enemy Fleet</h3>
+        <div id="enemy-board"></div>
+      </div>
+    </div>
+    <button id="quit-game" class="primary-btn">Quit Game</button>
+  </div>
+</section>
+
+<div id="ready-modal" class="hidden">
+  <div class="card">
+    <h2>Ready for Battle?</h2>
+    <p>Your fleet is ready. Start the battle?</p>
+    <button id="start-battle" class="primary-btn">Start Battle</button>
+  </div>
+</div>
+
+<div id="quit-modal" class="hidden">
+  <div class="card">
+    <h2>Quit Game?</h2>
+    <p>Are you sure you want to leave the battle?</p>
+    <button id="continue-game" class="primary-btn">Continue</button>
+    <button id="main-menu" class="primary-btn">Main Menu</button>
+  </div>
+</div>
+
+<div id="winner-modal" class="hidden">
+  <div class="card">
+    <h2 id="winner-text">Player wins!</h2>
+    <button id="play-again" class="primary-btn">Play Again</button>
+    <button id="winner-main-menu" class="primary-btn">Main Menu</button>
+  </div>
+</div>
 </body>
