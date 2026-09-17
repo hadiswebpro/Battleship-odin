@@ -1,5 +1,5 @@
 import Game from "./game";
-import { createBoard, createPlacementBoard, playMusic, playSound, stopMusic } from "./dom";
+import { createBoard, createPlacementBoard, playMusic, playSound, showScreenLoader, stopMusic } from "./dom";
 
 let activeGame = null;
 let computerTimer = null;
@@ -47,14 +47,19 @@ function startBattle(game) {
   if (!gameScreen || !yourBoard || !enemyBoard) return;
 
   placementScreen?.classList.add("hidden");
-  gameScreen.classList.remove("hidden");
-  playMusic("battle");
+  showScreenLoader("Entering battle...", () => {
+    gameScreen.classList.remove("hidden");
+    gameScreen.classList.remove("screen-enter");
+    void gameScreen.offsetWidth;
+    gameScreen.classList.add("screen-enter");
+    playMusic("battle");
 
-  createBoard(yourBoard, game.player1.gameboard, game.player1.name, false);
-  createBoard(enemyBoard, game.player2.gameboard, game.player2.name, true);
-  connectEnemyBoard(game);
-  connectBattleControls();
-  updateTurn("Player Turn");
+    createBoard(yourBoard, game.player1.gameboard, game.player1.name, false);
+    createBoard(enemyBoard, game.player2.gameboard, game.player2.name, true);
+    connectEnemyBoard(game);
+    connectBattleControls();
+    updateTurn("Player Turn");
+  });
 }
 
 function connectEnemyBoard(game) {
