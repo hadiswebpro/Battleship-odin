@@ -1,6 +1,6 @@
 import "./style.css";
 import { startGameFlow } from "./gameFlow";
-import {  playSound } from "./dom";
+import { playSound, showScreenLoader } from "./dom";
 import mainShipImage from "./images/ship.webp";
 
 const startScreen = document.querySelector("#start-screen");
@@ -15,8 +15,6 @@ const shipImage = document.querySelector(".main-ship-image");
 const SCREEN_DELAY = 120;
 
 if (shipImage) shipImage.src = mainShipImage;
-
-
 
 function showScreen(screen) {
   if (!screen) return;
@@ -43,7 +41,7 @@ modeBackButton?.addEventListener("click", () => {
 computerButton?.addEventListener("click", () => {
   playSound("button");
   modeScreen?.classList.add("hidden");
-  window.setTimeout(() => startGameFlow("computer"), SCREEN_DELAY);
+  showScreenLoader("Preparing your fleet...", () => startGameFlow("computer"));
 });
 
 playerButton?.addEventListener("click", () => {
