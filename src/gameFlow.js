@@ -116,7 +116,7 @@ function connectBackButtons() {
   const placementBack = document.querySelector("#placement-back");
   if (placementBack) placementBack.onclick = showExitModal;
   const modeBack = document.querySelector("#mode-back");
-  if (modeBack) modeBack.onclick = returnToStart;
+  if (modeBack) modeBack.onclick = () => { playSound("button"); returnToStart(); };
 }
 
 function connectGlobalExitControls() {
