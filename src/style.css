@@ -4,67 +4,12 @@ body{min-height:100vh;margin:0;font-family:"Segoe UI",sans-serif;color:white;ove
 .hidden{display:none!important}
 .placement-screen,.player-selection,.game-screen,.main-menu{min-height:100vh;width:100%;display:flex;justify-content:center;align-items:center;padding:20px;overflow:hidden}
 .card{display:flex;flex-direction:column;align-items:center;background:rgba(0,40,80,.7);padding:25px;border-radius:25px;backdrop-filter:blur(8px);box-shadow:0 20px 50px rgba(0,0,0,.35)}
-.placement-layout{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;max-height:100%}
-.placement-heading{text-align:center;display:flex;flex-direction:column;align-items:center;gap:0}
-.placement-heading h2{font-size:clamp(1.8rem,4vw,2.4rem);margin:0;line-height:1.05}
-#placement-error{color:#d45d48;font-size:.72rem;font-weight:700;line-height:1.05;margin:3px 0 0;min-height:0}
-.placement-card{gap:8px;padding:14px 18px}
-.ship-selector{display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:2px}
-.ship-option.placed{opacity:.45;cursor:not-allowed;filter:grayscale(1)}
-.ship-option.active{outline:3px solid white}
-.primary-btn,.ship-option,.confirm-placement{border:none;border-radius:50px;cursor:pointer;background:#00a8e8;color:white;font-weight:bold;transition:.2s}
-.primary-btn,.ship-option{padding:8px 16px;font-size:.9rem}
-.confirm-placement{padding:10px 25px;font-size:1rem}
-.primary-btn:hover,.ship-option:hover,.confirm-placement:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,168,232,.35)}
-.primary-btn:active,.ship-option:active,.confirm-placement:active{transform:translateY(2px);filter:brightness(.8);box-shadow:inset 0 4px 8px rgba(0,0,0,.35)}
-.cell.preview{background:rgba(0,255,150,.55)}
-.cell.preview.invalid{background:rgba(255,0,0,.55)}
-.board{display:grid;grid-template-columns:repeat(10,var(--cell));grid-template-rows:repeat(10,var(--cell));width:var(--board);height:var(--board)}
-.cell{width:var(--cell);height:var(--cell);position:relative;display:flex;align-items:center;justify-content:center;background:rgba(0,120,180,.35);border:1px solid rgba(255,255,255,.2);overflow:visible}
-.ship-image{position:absolute;top:0;left:0;width:var(--cell);height:calc(var(--cell) * var(--ship-length));object-fit:fill;pointer-events:auto;cursor:grab;z-index:2;transform-origin:top left}
-.ship-image:active{cursor:grabbing}
-.ship-image.horizontal{transform:rotate(90deg) translateY(-100%)}
-.attack-marker{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;font-size:clamp(1rem,2.8vw,1.45rem);line-height:1;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.55)}
-.attack-marker.hit{transform:scale(1.08)}
-.attack-marker.miss{font-size:clamp(.85rem,2.3vw,1.15rem)}
-.back-btn{position:fixed;top:20px;left:20px;z-index:20;background:#36c5ff;color:white;border:none;padding:10px 22px;border-radius:30px;font-weight:bold;cursor:pointer;box-shadow:0 5px 20px rgba(0,168,232,.4)}
-.main-menu-card{width:min(900px,90vw);min-height:420px;flex-direction:row;justify-content:space-around;gap:40px;animation:floatIn .8s ease}
-.hero-content{display:flex;flex-direction:column;align-items:center;gap:15px}
-.game-title{font-size:clamp(2.5rem,6vw,4.5rem);margin:0}
-.subtitle{font-size:clamp(1.1rem,2vw,1.6rem)}
-.main-ship-image{width:min(350px,40vw);max-height:250px;object-fit:contain}
-.modal-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,10,30,.65)}
-.modal-card{max-width:460px;width:100%;text-align:center;gap:12px}
-.modal-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
-.game-layout{width:min(850px,100%);display:flex;flex-direction:column;align-items:center;gap:5px;transform:translateY(-10px)}
-.battle-title{font-size:clamp(2rem,5vw,3.4rem);margin:0;line-height:1}
-.anchor-icon{display:inline-block;animation:anchorSwing 1.8s ease-in-out infinite;transform-origin:50% 10%}
-#turn-status{font-size:1.15rem;font-weight:700;margin:0 0 5px}
-.battle-boards{display:flex;justify-content:center;align-items:center;gap:18px;width:100%}
-.board-panel{display:flex;flex-direction:column;align-items:center;background:rgba(0,40,80,.7);padding:10px;border-radius:18px;box-shadow:0 15px 35px rgba(0,0,0,.3)}
-.board-panel h3{margin:0 0 6px;font-size:.95rem}
-#enemy-board .cell{cursor:pointer}
-#enemy-board .cell.hit,#your-board .cell.hit{background:rgba(220,50,50,.8)}
-#enemy-board .cell.miss,#your-board .cell.miss{background:rgba(210,210,210,.5)}
-@keyframes anchorSwing{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
-@keyframes floatIn{from{opacity:0;transform:scale(.9)}}
-@media(max-width:700px){
- :root{--cell:min(4.3vw,30px);--board:calc(var(--cell)*10)}
- body{overflow:hidden}
- .main-menu-card{flex-direction:column-reverse;width:95vw;min-height:0;padding:18px;gap:12px}
- .main-ship-image{width:48vw;max-height:35vh}
- .placement-screen,.game-screen{padding:8px}
- .placement-layout{gap:4px}
- .placement-heading h2{font-size:1.55rem}
- .placement-card{padding:8px 10px;gap:5px}
- .ship-selector{gap:4px;margin-bottom:0}
- .ship-option{padding:6px 9px;font-size:.72rem}
- .confirm-placement{padding:7px 18px;font-size:.85rem}
- .board-panel{padding:6px;border-radius:12px}
- .board-panel h3{font-size:.7rem;margin-bottom:4px}
- .battle-boards{gap:5px}
- .game-layout{transform:translateY(-3px);gap:3px}
- .battle-title{font-size:clamp(1.6rem,7vw,2.4rem)}
- #turn-status{font-size:.8rem;margin-bottom:2px}
- .back-btn{top:8px;left:8px;padding:6px 12px;font-size:.75rem}
-}
+.mode-layout{display:flex;flex-direction:column;align-items:center;gap:16px}.screen-heading{font-size:clamp(2rem,5vw,3rem);margin:0}.wave-heading{animation:seaWave 3.2s ease-in-out infinite}.mode-buttons{display:flex;justify-content:center;align-items:stretch;gap:18px;width:100%}.player-card{width:min(300px,40vw);padding:20px;gap:12px}.player-card h3{margin:0;text-align:center}
+.placement-layout{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;max-height:100%}.placement-heading{text-align:center;display:flex;flex-direction:column;align-items:center;gap:0}.placement-heading h2{font-size:clamp(1.8rem,4vw,2.4rem);margin:0;line-height:1.05}.ship-wave{display:inline-block;animation:shipWave 3s ease-in-out infinite;transform-origin:50% 80%}#placement-error{color:#d45d48;font-size:.72rem;font-weight:700;line-height:1.05;margin:3px 0 0;min-height:0}.placement-card{gap:6px;padding:12px 18px}.ship-selector{display:flex;justify-content:center;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:0}.ship-option.placed{opacity:.45;cursor:not-allowed;filter:grayscale(1)}.ship-option.active{outline:3px solid white}
+.primary-btn,.ship-option,.confirm-placement{border:none;border-radius:50px;cursor:pointer;background:#00a8e8;color:white;font-weight:bold;transition:.2s}.primary-btn,.ship-option{padding:8px 16px;font-size:.9rem}.confirm-placement{padding:12px 30px;font-size:1.05rem}.placement-actions{display:flex;justify-content:center;align-items:center;margin-top:0}.primary-btn:hover,.ship-option:hover,.confirm-placement:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,168,232,.35)}.primary-btn:active,.ship-option:active,.confirm-placement:active{transform:translateY(2px);filter:brightness(.8);box-shadow:inset 0 4px 8px rgba(0,0,0,.35)}
+.cell.preview{background:rgba(0,255,150,.55)}.cell.preview.invalid{background:rgba(255,0,0,.55)}.board{display:grid;grid-template-columns:repeat(10,var(--cell));grid-template-rows:repeat(10,var(--cell));width:var(--board);height:var(--board)}.cell{width:var(--cell);height:var(--cell);position:relative;display:flex;align-items:center;justify-content:center;background:rgba(0,120,180,.35);border:1px solid rgba(255,255,255,.2);overflow:visible}.ship-image{position:absolute;top:0;left:0;width:var(--cell);height:calc(var(--cell)*var(--ship-length));object-fit:fill;pointer-events:auto;cursor:grab;z-index:2;transform-origin:top left}.ship-image:active{cursor:grabbing}.ship-image.horizontal{transform:rotate(90deg) translateY(-100%)}.attack-marker{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;font-size:clamp(1rem,2.8vw,1.45rem);line-height:1;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.55)}.attack-marker.hit{transform:scale(1.08)}.attack-marker.miss{font-size:clamp(.85rem,2.3vw,1.15rem)}
+.back-btn{position:fixed;top:20px;left:20px;z-index:20;background:#36c5ff;color:white;border:none;padding:10px 22px;border-radius:30px;font-weight:bold;cursor:pointer;box-shadow:0 5px 20px rgba(0,168,232,.4)}.main-menu-card{width:min(900px,90vw);min-height:420px;flex-direction:row;justify-content:space-around;gap:40px;animation:floatIn .8s ease}.hero-content{display:flex;flex-direction:column;align-items:center;gap:15px}.game-title{font-size:clamp(2.5rem,6vw,4.5rem);margin:0}.subtitle{font-size:clamp(1.1rem,2vw,1.6rem)}.main-ship-image{width:min(350px,40vw);max-height:250px;object-fit:contain}
+.modal-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,10,30,.65)}.modal-card{max-width:460px;width:100%;text-align:center;gap:12px}.modal-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.game-layout{width:min(850px,100%);display:flex;flex-direction:column;align-items:center;gap:5px;transform:translateY(-10px)}.battle-title{font-size:clamp(2rem,5vw,3.4rem);margin:0;line-height:1}.anchor-icon{display:inline-block;animation:anchorSwing 1.8s ease-in-out infinite;transform-origin:50% 10%}#turn-status{font-size:1.15rem;font-weight:700;margin:0 0 5px}.battle-boards{display:flex;justify-content:center;align-items:center;gap:18px;width:100%}.board-panel{display:flex;flex-direction:column;align-items:center;background:rgba(0,40,80,.7);padding:10px;border-radius:18px;box-shadow:0 15px 35px rgba(0,0,0,.3)}.board-panel h3{margin:0 0 6px;font-size:.95rem}#enemy-board .cell{cursor:pointer}
+@keyframes anchorSwing{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}@keyframes seaWave{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}@keyframes shipWave{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-5px) rotate(-3deg)}}@keyframes floatIn{from{opacity:0;transform:scale(.9)}}
+@media(max-width:700px){:root{--cell:min(4.3vw,30px);--board:calc(var(--cell)*10)}body{overflow:hidden}.main-menu-card{flex-direction:column-reverse;width:95vw;min-height:0;padding:18px;gap:12px}.main-ship-image{width:48vw;max-height:35vh}.placement-screen,.game-screen{padding:8px}.placement-layout{gap:3px}.placement-heading h2{font-size:1.55rem}.placement-card{padding:7px 9px;gap:4px}.ship-selector{gap:3px}.ship-option{padding:6px 8px;font-size:.7rem}.confirm-placement{padding:9px 20px;font-size:.9rem}.board-panel{padding:6px;border-radius:12px}.board-panel h3{font-size:.7rem;margin-bottom:4px}.battle-boards{gap:5px}.game-layout{transform:translateY(-3px);gap:3px}.battle-title{font-size:clamp(1.6rem,7vw,2.4rem)}#turn-status{font-size:.8rem;margin-bottom:2px}.back-btn{top:8px;left:8px;padding:6px 12px;font-size:.75rem}.mode-buttons{gap:8px}.player-card{width:42vw;padding:12px 8px}.player-card h3{font-size:.8rem}}
