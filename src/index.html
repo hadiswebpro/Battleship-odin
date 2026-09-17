@@ -58,28 +58,48 @@
   </div>
 </section>
 
-<div id="ready-modal" class="hidden">
-  <div class="card">
+<div id="ready-modal" class="hidden modal-overlay">
+  <div class="card modal-card">
     <h2>Ready for Battle?</h2>
     <p>Your fleet is ready. Start the battle?</p>
-    <button id="start-battle" class="primary-btn">Start Battle</button>
+    <div class="modal-actions">
+      <button id="cancel-ready" class="primary-btn">Cancel</button>
+      <button id="start-battle" class="primary-btn">Start Battle</button>
+    </div>
   </div>
 </div>
 
-<div id="quit-modal" class="hidden">
-  <div class="card">
+<div id="exit-modal" class="hidden modal-overlay">
+  <div class="card modal-card">
+    <h2>Leave Game?</h2>
+    <p>Your current fleet and game progress will be lost. Are you sure you want to leave?</p>
+    <div class="modal-actions">
+      <button id="cancel-exit" class="primary-btn">Cancel</button>
+      <button id="confirm-exit" class="primary-btn">Yes, Leave</button>
+    </div>
+  </div>
+</div>
+
+<div id="quit-modal" class="hidden modal-overlay">
+  <div class="card modal-card">
     <h2>Quit Game?</h2>
     <p>Are you sure you want to leave the battle?</p>
-    <button id="continue-game" class="primary-btn">Continue</button>
-    <button id="main-menu" class="primary-btn">Main Menu</button>
+    <div class="modal-actions">
+      <button id="continue-game" class="primary-btn">Continue</button>
+      <button id="main-menu" class="primary-btn">Main Menu</button>
+    </div>
   </div>
 </div>
 
-<div id="winner-modal" class="hidden">
-  <div class="card">
+<div id="winner-modal" class="hidden modal-overlay">
+  <div class="card modal-card">
     <h2 id="winner-text">Player wins!</h2>
-    <button id="play-again" class="primary-btn">Play Again</button>
-    <button id="winner-main-menu" class="primary-btn">Main Menu</button>
+    <p>Your game is over. What would you like to do?</p>
+    <div class="modal-actions">
+      <button id="winner-cancel" class="primary-btn">Stay</button>
+      <button id="play-again" class="primary-btn">Play Again</button>
+      <button id="winner-main-menu" class="primary-btn">Main Menu</button>
+    </div>
   </div>
 </div>
 </body>
