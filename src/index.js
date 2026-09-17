@@ -1,5 +1,6 @@
 import "./style.css";
 import { startGameFlow } from "./gameFlow";
+import { enableButtonSounds, playMusic } from "./dom";
 import mainShipImage from "./images/ship.webp";
 
 const startScreen = document.querySelector("#start-screen");
@@ -11,6 +12,8 @@ const playerButton = document.querySelector("#player-mode");
 const shipImage = document.querySelector(".main-ship-image");
 
 if (shipImage) shipImage.src = mainShipImage;
+
+enableButtonSounds();
 
 startButton?.addEventListener("click", () => {
   startScreen?.classList.add("hidden");
