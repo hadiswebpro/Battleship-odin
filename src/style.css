@@ -37,7 +37,14 @@ body {
  box-shadow:0 20px 50px rgba(0,0,0,.35);
 }
 
-#placement-screen .card {gap:12px;padding:22px;max-height:100vh;}
+#placement-screen .card {
+ gap:12px;
+ padding:22px;
+ max-height:calc(100vh - 40px);
+ overflow-y:auto;
+ overflow-x:hidden;
+ width:min(100%,520px);
+}
 
 .ship-option.placed {opacity:.45;cursor:not-allowed;filter:grayscale(1);}
 .ship-option.active {outline:3px solid white;}
@@ -80,6 +87,10 @@ body {
 .ship-image.horizontal {transform:rotate(90deg) translateY(-100%);}
 
 .back-btn {position:fixed;top:20px;left:20px;z-index:20;background:#36c5ff;color:white;border:none;padding:10px 22px;border-radius:30px;font-weight:bold;cursor:pointer;box-shadow:0 5px 20px rgba(0,168,232,.4);}
+
+.modal-overlay {position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,10,30,.65);}
+.modal-card {max-width:460px;width:100%;text-align:center;gap:12px;}
+.modal-actions {display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
 
 @keyframes titleDepth {50% {transform:translateZ(20px) scale(1.04);text-shadow:0 10px 30px #00a8e8;}}
 @keyframes floatIn {from{opacity:0;transform:scale(.9);}}
