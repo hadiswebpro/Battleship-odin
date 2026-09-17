@@ -18,6 +18,7 @@ export function enableShipPlacement(boardElement, player, onReady) {
   let direction = "vertical";
   let preview = null;
   let draggedShip = null;
+  let wasDragging = false;
 
   const buttons = [...document.querySelectorAll(".ship-option")];
 
@@ -54,6 +55,7 @@ export function enableShipPlacement(boardElement, player, onReady) {
         return;
       }
 
+      clearPlacementError();
       onReady?.();
     };
   }
@@ -81,6 +83,7 @@ export function enableShipPlacement(boardElement, player, onReady) {
         ?.classList.add("placed");
       selectedShip = null;
       preview = null;
+      clearPlacementError();
       createBoard(boardElement, player.gameboard, player.name);
       enableShipPlacement(boardElement, player, onReady);
     };
@@ -143,7 +146,17 @@ export function enableShipPlacement(boardElement, player, onReady) {
     img.dataset.ship = ship.name;
     img.classList.add("draggable-ship");
 
+    img.onclick = (event) => {
+      event.stopPropagation();
+      if (wasDragging) {
+        wasDragging = false;
+        return;
+      }
+      rotatePlacedShip(boardElement, player, ship, onReady);
+    };
+
     img.ondragstart = (event) => {
+      wasDragging = true;
       draggedShip = { ship };
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData("text/plain", ship.name);
@@ -156,6 +169,24 @@ export function enableShipPlacement(boardElement, player, onReady) {
       clearPreview(boardElement);
     };
   });
+}
+
+function rotatePlacedShip(boardElement, player, ship, onReady) {
+  if (!ship.coordinates?.length) return;
+
+  const start = ship.coordinates[0];
+  const newDirection = ship.direction === "vertical" ? "horizontal" : "vertical";
+  const coordinates = getCoordinates(start[0], start[1], ship.length, newDirection);
+
+  if (!coordinates || !isValidPlacement(player, coordinates, ship)) {
+    showPlacementError("⚠ This ship cannot be rotated here.");
+    return;
+  }
+
+  movePlacedShip(player, ship, coordinates);
+  clearPlacementError();
+  createBoard(boardElement, player.gameboard, player.name);
+  enableShipPlacement(boardElement, player, onReady);
 }
 
 function movePlacedShip(player, ship, coordinates) {
@@ -211,14 +242,19 @@ function isValidPlacement(player, coordinates, movingShip = null) {
   });
 }
 
-function showPlacementError() {
+function showPlacementError(message = "⚠ Please place all your ships before entering battle") {
   let error = document.querySelector("#placement-error");
   if (!error) {
     error = document.createElement("p");
     error.id = "placement-error";
-    document.querySelector(".placement-screen .card")?.append(error);
+    document.querySelector("#placement-screen .card")?.append(error);
   }
-  error.textContent = "⚠ Please place all your ships before entering battle";
+  error.textContent = message;
+  error.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function clearPlacementError() {
+  document.querySelector("#placement-error")?.remove();
 }
 
 export function createBoard(element, gameboard = null, playerName = "", hideShips = false) {
