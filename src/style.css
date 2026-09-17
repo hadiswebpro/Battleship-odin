@@ -26,6 +26,71 @@ body {
     animation: seaScreenIn .65s ease both
 }
 
+.screen-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(rgba(0, 25, 55, .72), rgba(0, 15, 40, .86));
+    backdrop-filter: blur(5px)
+}
+
+.screen-loader-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-width: min(330px, 85vw);
+    padding: 28px 36px;
+    border-radius: 25px;
+    background: rgba(0, 40, 80, .78);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+    text-align: center
+}
+
+.screen-loader-card h2 {
+    margin: 0;
+    font-size: clamp(1.35rem, 4vw, 2rem)
+}
+
+.loader-ship {
+    display: inline-block;
+    font-size: 2.5rem;
+    animation: anchorSwing 1.2s ease-in-out infinite
+}
+
+.loader-wave {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+    height: 24px
+}
+
+.loader-wave span {
+    width: 7px;
+    height: 8px;
+    border-radius: 10px;
+    background: #36c5ff;
+    animation: loaderWave .9s ease-in-out infinite
+}
+
+.loader-wave span:nth-child(2) {
+    animation-delay: .15s
+}
+
+.loader-wave span:nth-child(3) {
+    animation-delay: .3s
+}
+
+.screen-loader-leave {
+    animation: loaderLeave .22s ease both
+}
+
 .placement-screen,
 .player-selection,
 .game-screen,
@@ -389,62 +454,38 @@ body {
 }
 
 @keyframes anchorSwing {
-
-    0%,
-    100% {
-        transform: rotate(-4deg)
-    }
-
-    50% {
-        transform: rotate(4deg)
-    }
+    0%, 100% { transform: rotate(-4deg) }
+    50% { transform: rotate(4deg) }
 }
 
 @keyframes seaWave {
-
-    0%,
-    100% {
-        transform: translateY(0)
-    }
-
-    50% {
-        transform: translateY(-5px)
-    }
+    0%, 100% { transform: translateY(0) }
+    50% { transform: translateY(-5px) }
 }
 
 @keyframes shipWave {
-
-    0%,
-    100% {
-        transform: translateY(0) rotate(0)
-    }
-
-    50% {
-        transform: translateY(-5px) rotate(-3deg)
-    }
+    0%, 100% { transform: translateY(0) rotate(0) }
+    50% { transform: translateY(-5px) rotate(-3deg) }
 }
 
 @keyframes floatIn {
-    from {
-        opacity: 0;
-        transform: scale(.9)
-    }
+    from { opacity: 0; transform: scale(.9) }
 }
 
 @keyframes seaScreenIn {
-    0% {
-        opacity: 0;
-        transform: translateY(10px) scale(.985)
-    }
+    0% { opacity: 0; transform: translateY(10px) scale(.985) }
+    45% { opacity: .75 }
+    100% { opacity: 1; transform: translateY(0) scale(1) }
+}
 
-    45% {
-        opacity: .75
-    }
+@keyframes loaderWave {
+    0%, 100% { height: 8px; opacity: .5 }
+    50% { height: 22px; opacity: 1 }
+}
 
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1)
-    }
+@keyframes loaderLeave {
+    from { opacity: 1 }
+    to { opacity: 0; transform: scale(1.02) }
 }
 
 @media(max-width:700px) {
@@ -453,9 +494,7 @@ body {
         --board: calc(var(--cell)*10)
     }
 
-    body {
-        overflow: hidden
-    }
+    body { overflow: hidden }
 
     .main-menu-card {
         flex-direction: column-reverse;
@@ -471,26 +510,18 @@ body {
     }
 
     .placement-screen,
-    .game-screen {
-        padding: 8px
-    }
+    .game-screen { padding: 8px }
 
-    .placement-layout {
-        gap: 3px
-    }
+    .placement-layout { gap: 3px }
 
-    .placement-heading h2 {
-        font-size: 1.55rem
-    }
+    .placement-heading h2 { font-size: 1.55rem }
 
     .placement-card {
         padding: 7px 9px;
         gap: 4px
     }
 
-    .ship-selector {
-        gap: 3px
-    }
+    .ship-selector { gap: 3px }
 
     .ship-option {
         padding: 6px 8px;
@@ -512,18 +543,14 @@ body {
         margin-bottom: 4px
     }
 
-    .battle-boards {
-        gap: 5px
-    }
+    .battle-boards { gap: 5px }
 
     .game-layout {
         transform: translateY(-3px);
         gap: 3px
     }
 
-    .battle-title {
-        font-size: clamp(1.6rem, 7vw, 2.4rem)
-    }
+    .battle-title { font-size: clamp(1.6rem, 7vw, 2.4rem) }
 
     #turn-status {
         font-size: .8rem;
@@ -537,16 +564,18 @@ body {
         font-size: .75rem
     }
 
-    .mode-buttons {
-        gap: 8px
-    }
+    .mode-buttons { gap: 8px }
 
     .player-card {
         width: 42vw;
         padding: 12px 8px
     }
 
-    .player-card h3 {
-        font-size: .8rem
+    .player-card h3 { font-size: .8rem }
+
+    .screen-loader-card {
+        min-width: 0;
+        width: 82vw;
+        padding: 24px 20px
     }
 }
