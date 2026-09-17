@@ -6,7 +6,57 @@ const shipImages = {
   Destroyer: new URL("./images/destroyer.webp", import.meta.url).href,
 };
 
-export function playSound() {}
+const audioFiles = {
+  button: new URL("./audio/button-wave.mp3", import.meta.url).href,
+  placement: new URL("./audio/placement-sea.mp3", import.meta.url).href,
+  battle: new URL("./audio/battle-sea.mp3", import.meta.url).href,
+  hit: new URL("./audio/hit.mp3", import.meta.url).href,
+  miss: new URL("./audio/miss.mp3", import.meta.url).href,
+  victory: new URL("./audio/victory.mp3", import.meta.url).href,
+};
+
+let currentMusic = null;
+
+function createAudio(src, loop = false) {
+  const audio = new Audio(src);
+  audio.loop = loop;
+  audio.volume = 0.35;
+  return audio;
+}
+
+export function playMusic(name) {
+  stopMusic();
+  const src = audioFiles[name];
+  if (!src) return;
+  currentMusic = createAudio(src, true);
+  currentMusic.play().catch(() => {});
+}
+
+export function stopMusic() {
+  if (!currentMusic) return;
+  currentMusic.pause();
+  currentMusic.currentTime = 0;
+  currentMusic = null;
+}
+
+export function playSound(name) {
+  const src = audioFiles[name];
+  if (!src) return;
+  const sound = createAudio(src);
+  sound.loop = false;
+  sound.volume = 0.45;
+  sound.play().catch(() => {});
+  sound.addEventListener("ended", () => sound.remove());
+}
+
+export function enableButtonSounds() {
+  document.querySelectorAll("button").forEach((button) => {
+    if (button.classList.contains("ship-option")) return;
+    if (button.dataset.soundReady === "true") return;
+    button.dataset.soundReady = "true";
+    button.addEventListener("click", () => playSound("button"));
+  });
+}
 
 export function createPlacementBoard(boardElement, player, callback) {
   createBoard(boardElement, player.gameboard, player.name);
@@ -236,9 +286,10 @@ function renderAttackMarkers(element, gameboard) {
     const [row, col] = key.split(",").map(Number);
     const cell = element.querySelector(`[data-row="${row}"][data-col="${col}"]`);
     if (!cell) return;
+    const result = gameboard.getAttackResult([row, col]);
     const marker = document.createElement("span");
-    marker.className = `attack-marker ${gameboard.getAttackResult([row, col])}`;
-    marker.textContent = gameboard.getAttackResult([row, col]) === "hit" ? "💥" : "💧";
+    marker.className = `attack-marker ${result}`;
+    marker.textContent = result === "hit" ? "💥" : "💧";
     cell.appendChild(marker);
   });
 }
