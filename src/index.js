@@ -1,6 +1,7 @@
 import "./style.css";
 import "./mobile-landscape.css";
 import "./tablet-portrait.css";
+import "./touch-drag.js";
 import { startGameFlow } from "./gameFlow";
 import { playSound, showScreenLoader } from "./dom";
 import mainShipImage from "./images/ship.webp";
