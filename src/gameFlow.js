@@ -106,9 +106,9 @@ function connectBattleControls() {
   const winnerStay = document.querySelector("#winner-cancel");
   if (quit) quit.onclick = showQuitModal;
   if (continueButton) continueButton.onclick = hideQuitModal;
-  if (mainMenu) mainMenu.onclick = returnToStart;
-  if (restart) restart.onclick = restartGame;
-  if (winnerMenu) winnerMenu.onclick = returnToStart;
+  if (mainMenu) mainMenu.onclick = () => { playSound("button"); returnToStart(); };
+  if (restart) restart.onclick = () => { playSound("button"); restartGame(); };
+  if (winnerMenu) winnerMenu.onclick = () => { playSound("button"); returnToStart(); };
   if (winnerStay) winnerStay.onclick = hideWinnerModal;
 }
 
@@ -122,7 +122,7 @@ function connectBackButtons() {
 function connectGlobalExitControls() {
   const confirmExit = document.querySelector("#confirm-exit");
   const cancelExit = document.querySelector("#cancel-exit");
-  if (confirmExit) confirmExit.onclick = returnToStart;
+  if (confirmExit) confirmExit.onclick = () => { playSound("button"); returnToStart(); };
   if (cancelExit) cancelExit.onclick = hideExitModal;
 }
 
@@ -136,6 +136,7 @@ function showReadyModal(callback) {
   }
   modal.classList.remove("hidden");
   startButton.onclick = () => {
+    playSound("button");
     modal.classList.add("hidden");
     callback();
   };
