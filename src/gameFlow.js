@@ -56,12 +56,9 @@ function connectEnemyBoard(game) {
     const cell = event.target.closest(".cell");
     if (!cell || game.currentPlayer !== game.player1 || game.isGameOver()) return;
 
-    const coordinate = [
-      Number(cell.dataset.row),
-      Number(cell.dataset.col),
-    ];
-
+    const coordinate = [Number(cell.dataset.row), Number(cell.dataset.col)];
     const result = game.attack(coordinate);
+
     if (result === "already") return;
 
     cell.classList.add(result);
@@ -104,29 +101,61 @@ function connectEnemyBoard(game) {
 
 function connectBattleControls() {
   document.querySelector("#quit-game")?.addEventListener("click", showQuitModal);
+  document.querySelector("#continue-game")?.addEventListener("click", hideQuitModal);
   document.querySelector("#main-menu")?.addEventListener("click", returnToStart);
-  document.querySelector("#winner-main-menu")?.addEventListener("click", returnToStart);
   document.querySelector("#play-again")?.addEventListener("click", returnToStart);
-  document.querySelector("#continue-game")?.addEventListener("click", () => {
-    document.querySelector("#quit-modal")?.classList.add("hidden");
-  });
+  document.querySelector("#winner-main-menu")?.addEventListener("click", returnToStart);
+  document.querySelector("#winner-cancel")?.addEventListener("click", hideWinnerModal);
 }
 
 function connectBackButtons() {
-  document.querySelectorAll(".back-btn").forEach((button) => {
+  const backButtons = document.querySelectorAll(".back-btn");
+
+  backButtons.forEach((button) => {
     button.onclick = () => {
       const placement = document.querySelector("#placement-screen");
-      const modeScreen = document.querySelector("#mode-screen");
-      if (placement && !placement.classList.contains("hidden")) {
-        placement.classList.add("hidden");
-        modeScreen?.classList.remove("hidden");
-      }
+      if (!placement || placement.classList.contains("hidden")) return;
+      showExitModal();
     };
   });
 }
 
-function showQuitModal() {
-  document.querySelector("#quit-modal")?.classList.remove("hidden");
+function showReadyModal(callback) {
+  const modal = document.querySelector("#ready-modal");
+  const startButton = document.querySelector("#start-battle");
+  const cancelButton = document.querySelector("#cancel-ready");
+
+  if (!modal || !startButton) {
+    callback();
+    return;
+  }
+
+  modal.classList.remove("hidden");
+
+  startButton.onclick = () => {
+    modal.classList.add("hidden");
+    callback();
+  };
+
+  if (cancelButton) {
+    cancelButton.onclick = () => modal.classList.add("hidden");
+  }
+}
+
+function showExitModal() {
+  document.querySelector("#exit-modal")?.classList.remove("hidden");
+}
+
+function hideExitModal() {
+  document.querySelector("#exit-modal")?.classList.add("hidden");
+}
+
+function hideQuitModal() {
+  document.querySelector("#quit-modal")?.classList.add("hidden");
+}
+
+function hideWinnerModal() {
+  document.querySelector("#winner-modal")?.classList.add("hidden");
 }
 
 function returnToStart() {
@@ -145,23 +174,17 @@ function showWinnerModal(game) {
   playSound("victory");
 }
 
-function showReadyModal(callback) {
-  const modal = document.querySelector("#ready-modal");
-  const button = document.querySelector("#start-battle");
-
-  if (!modal || !button) {
-    callback();
-    return;
-  }
-
-  modal.classList.remove("hidden");
-  button.onclick = () => {
-    modal.classList.add("hidden");
-    callback();
-  };
-}
-
 function updateTurn(text) {
   const turn = document.querySelector("#turn-status");
   if (turn) turn.textContent = text;
+}
+
+const confirmExitButton = document.querySelector("#confirm-exit");
+if (confirmExitButton) {
+  confirmExitButton.onclick = returnToStart;
+}
+
+const cancelExitButton = document.querySelector("#cancel-exit");
+if (cancelExitButton) {
+  cancelExitButton.onclick = hideExitModal;
 }
