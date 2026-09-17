@@ -58,12 +58,8 @@ export function playSound(name) {
 }
 
 export function enableButtonSounds() {
-  document.querySelectorAll("button").forEach((button) => {
-    if (button.classList.contains("ship-option")) return;
-    if (button.dataset.soundReady === "true") return;
-    button.dataset.soundReady = "true";
-    button.addEventListener("click", () => playSound("button"));
-  });
+  // Button wave sounds are triggered explicitly by actions that navigate
+  // or intentionally open a new screen/modal. Ordinary buttons stay silent.
 }
 
 export function createPlacementBoard(boardElement, player, callback) {
