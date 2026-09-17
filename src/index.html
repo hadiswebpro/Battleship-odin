@@ -23,23 +23,29 @@
 
 <section id="placement-screen" class="hidden placement-screen">
   <button id="placement-back" class="back-btn">← Back</button>
-  <div class="card">
-    <h2>Place Your Ships 🚢</h2>
-    <div class="ship-selector">
-      <button class="ship-option" data-ship="Carrier" data-length="5">Carrier (5)</button>
-      <button class="ship-option" data-ship="Battleship" data-length="4">Battleship (4)</button>
-      <button class="ship-option" data-ship="Cruiser" data-length="3">Cruiser (3)</button>
-      <button class="ship-option" data-ship="Submarine" data-length="3">Submarine (3)</button>
-      <button class="ship-option" data-ship="Destroyer" data-length="2">Destroyer (2)</button>
+  <div class="placement-layout">
+    <div class="placement-heading">
+      <h2>Place Your Ships 🚢</h2>
+      <p id="placement-error" class="hidden" aria-live="polite"></p>
     </div>
-    <div id="player-board"></div>
-    <div class="placement-actions">
-      <button id="confirm-placement" class="confirm-placement">Start Game</button>
+    <div class="card placement-card">
+      <div class="ship-selector">
+        <button class="ship-option" data-ship="Carrier" data-length="5">Carrier (5)</button>
+        <button class="ship-option" data-ship="Battleship" data-length="4">Battleship (4)</button>
+        <button class="ship-option" data-ship="Cruiser" data-length="3">Cruiser (3)</button>
+        <button class="ship-option" data-ship="Submarine" data-length="3">Submarine (3)</button>
+        <button class="ship-option" data-ship="Destroyer" data-length="2">Destroyer (2)</button>
+      </div>
+      <div id="player-board"></div>
+      <div class="placement-actions">
+        <button id="confirm-placement" class="confirm-placement">Start Game</button>
+      </div>
     </div>
   </div>
 </section>
 
 <section id="game" class="hidden game-screen">
+  <button id="quit-game" class="back-btn">← Quit Game</button>
   <div class="game-layout">
     <h1 class="battle-title">⚓ Battleship</h1>
     <p id="turn-status">Player Turn</p>
@@ -53,7 +59,6 @@
         <div id="enemy-board"></div>
       </div>
     </div>
-    <button id="quit-game" class="primary-btn">Quit Game</button>
   </div>
 </section>
 
@@ -93,10 +98,10 @@
 <div id="winner-modal" class="hidden modal-overlay">
   <div class="card modal-card">
     <h2 id="winner-text">Player wins!</h2>
-    <p>Your game is over. What would you like to do?</p>
+    <p>Your game is over.</p>
     <div class="modal-actions">
       <button id="winner-cancel" class="primary-btn">Stay</button>
-      <button id="play-again" class="primary-btn">Play Again</button>
+      <button id="play-again" class="primary-btn">Restart the Game</button>
       <button id="winner-main-menu" class="primary-btn">Main Menu</button>
     </div>
   </div>
