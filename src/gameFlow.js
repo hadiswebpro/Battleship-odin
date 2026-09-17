@@ -102,16 +102,15 @@ function connectEnemyBoard(game) {
 function connectBattleControls() {
   document.querySelector("#quit-game")?.addEventListener("click", showQuitModal);
   document.querySelector("#continue-game")?.addEventListener("click", hideQuitModal);
-  document.querySelector("#main-menu")?.addEventListener("click", returnToStart);
-  document.querySelector("#play-again")?.addEventListener("click", returnToStart);
-  document.querySelector("#winner-main-menu")?.addEventListener("click", returnToStart);
+
+  document.querySelector("#main-menu")?.addEventListener("click", showExitModal);
+  document.querySelector("#play-again")?.addEventListener("click", showExitModal);
+  document.querySelector("#winner-main-menu")?.addEventListener("click", showExitModal);
   document.querySelector("#winner-cancel")?.addEventListener("click", hideWinnerModal);
 }
 
 function connectBackButtons() {
-  const backButtons = document.querySelectorAll(".back-btn");
-
-  backButtons.forEach((button) => {
+  document.querySelectorAll(".back-btn").forEach((button) => {
     button.onclick = () => {
       const placement = document.querySelector("#placement-screen");
       if (!placement || placement.classList.contains("hidden")) return;
