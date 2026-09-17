@@ -57,6 +57,32 @@ export function playSound(name) {
   sound.play().catch(() => {});
 }
 
+export function showScreenLoader(message, callback, duration = 750) {
+  const existing = document.querySelector(".screen-loader");
+  existing?.remove();
+
+  const loader = document.createElement("div");
+  loader.className = "screen-loader screen-enter";
+  loader.innerHTML = `
+    <div class="screen-loader-card">
+      <div class="loader-ship">⚓</div>
+      <h2>${message}</h2>
+      <div class="loader-wave" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(loader);
+
+  window.setTimeout(() => {
+    loader.classList.add("screen-loader-leave");
+    window.setTimeout(() => {
+      loader.remove();
+      callback?.();
+    }, 220);
+  }, duration);
+}
 
 export function createPlacementBoard(boardElement, player, callback) {
   createBoard(boardElement, player.gameboard, player.name);
@@ -125,7 +151,7 @@ export function enableShipPlacement(boardElement, player, onReady) {
       const col = Number(cell.dataset.col);
       const shipDirection = ship.direction || "vertical";
       const coordinates = getCoordinates(row, col, ship.length, shipDirection);
-      renderPreview({ row, col }, boardElement, { name: ship.name, length: ship.length }, shipDirection, player, ship);
+      renderPreview({ row, col }, boardElement, { name: ship.name, length: ship.length }, shipDirection, ship);
       if (!coordinates) clearPreview(boardElement);
     };
 
