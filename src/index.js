@@ -1,6 +1,6 @@
 import "./style.css";
 import { startGameFlow } from "./gameFlow";
-import { enableButtonSounds, playSound } from "./dom";
+import {  playSound } from "./dom";
 import mainShipImage from "./images/ship.webp";
 
 const startScreen = document.querySelector("#start-screen");
@@ -16,7 +16,7 @@ const SCREEN_DELAY = 120;
 
 if (shipImage) shipImage.src = mainShipImage;
 
-enableButtonSounds();
+
 
 function showScreen(screen) {
   if (!screen) return;

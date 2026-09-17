@@ -57,10 +57,6 @@ export function playSound(name) {
   sound.play().catch(() => {});
 }
 
-export function enableButtonSounds() {
-  // Button wave sounds are triggered explicitly by actions that navigate
-  // or intentionally open a new screen/modal. Ordinary buttons stay silent.
-}
 
 export function createPlacementBoard(boardElement, player, callback) {
   createBoard(boardElement, player.gameboard, player.name);
@@ -186,7 +182,7 @@ function rotatePlacedShip(boardElement, player, ship, onReady) {
   const newDirection = ship.direction === "vertical" ? "horizontal" : "vertical";
   const coordinates = getCoordinates(start[0], start[1], ship.length, newDirection);
   if (!coordinates || !isValidPlacement(player, coordinates, ship)) {
-    showPlacementError("⚠ این کشتی در این موقعیت قابل چرخش نیست.");
+    showPlacementError("⚠ This ship can not turn this way");
     return;
   }
   movePlacedShip(player, ship, coordinates);
