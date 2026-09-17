@@ -1,0 +1,114 @@
+/* Mobile + tablet landscape layout */
+@media (orientation: landscape) {
+  :root {
+    --cell: min(30px, calc((100vw - 44px) / 20), calc((100vh - 112px) / 10));
+    --board: calc(var(--cell) * 10);
+  }
+
+  body {
+    overflow: hidden;
+  }
+
+  .placement-screen,
+  .game-screen,
+  .main-menu,
+  .player-selection {
+    min-height: 100svh;
+    height: 100svh;
+    padding: 6px 10px;
+  }
+
+  .game-layout {
+    width: 100%;
+    gap: 2px;
+    transform: none;
+  }
+
+  .battle-title {
+    font-size: clamp(1.35rem, 5vh, 2.2rem);
+    line-height: .95;
+  }
+
+  #turn-status {
+    font-size: clamp(.7rem, 2.2vh, .95rem);
+    margin: 0 0 2px;
+  }
+
+  .battle-boards {
+    gap: clamp(5px, 2vw, 18px);
+    flex-wrap: nowrap;
+  }
+
+  .board-panel {
+    padding: clamp(4px, 1vh, 8px);
+    border-radius: 12px;
+  }
+
+  .board-panel h3 {
+    font-size: clamp(.6rem, 2vh, .85rem);
+    margin-bottom: 2px;
+  }
+
+  .back-btn {
+    top: 5px;
+    left: 7px;
+    padding: 5px 11px;
+    font-size: .7rem;
+  }
+
+  .placement-layout {
+    width: 100%;
+    gap: 2px;
+    justify-content: center;
+  }
+
+  .placement-heading {
+    margin-bottom: 3px;
+  }
+
+  .placement-heading h2 {
+    font-size: clamp(1.15rem, 4.5vh, 1.9rem);
+  }
+
+  .placement-card {
+    max-width: 96vw;
+    padding: 5px 9px;
+    gap: 3px;
+  }
+
+  .ship-selector {
+    gap: 3px;
+    max-width: 96vw;
+  }
+
+  .ship-option {
+    padding: 4px 7px;
+    font-size: clamp(.58rem, 1.8vh, .72rem);
+  }
+
+  .confirm-placement {
+    padding: 6px 17px;
+    font-size: clamp(.7rem, 2vh, .9rem);
+  }
+
+  #placement-error {
+    font-size: .62rem;
+  }
+}
+
+/* Larger tablets in landscape */
+@media (orientation: landscape) and (min-width: 701px) and (min-height: 701px) {
+  :root {
+    --cell: min(38px, calc((100vw - 100px) / 20), calc((100vh - 180px) / 10));
+    --board: calc(var(--cell) * 10);
+  }
+
+  .game-screen,
+  .placement-screen {
+    padding: 12px 20px;
+  }
+
+  .battle-boards {
+    gap: 24px;
+  }
+}
