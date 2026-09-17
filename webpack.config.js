@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 class ManifestPlugin {
     apply(compiler) {
@@ -10,15 +11,30 @@ class ManifestPlugin {
                     const manifest = {
                         name: "Battleship",
                         short_name: "Battleship",
+                        id: ".",
                         start_url: ".",
+                        scope: ".",
                         display: "standalone",
                         orientation: "landscape",
                         background_color: "#001e3c",
                         theme_color: "#001e3c",
+                        icons: [
+                            {
+                                src: "./favicon/android-chrome-192x192.png",
+                                sizes: "192x192",
+                                type: "image/png",
+                            },
+                            {
+                                src: "./favicon/android-chrome-512x512.png",
+                                sizes: "512x512",
+                                type: "image/png",
+                            },
+                        ],
                     };
+                    const content = JSON.stringify(manifest, null, 2);
                     assets["manifest.json"] = {
-                        source: () => JSON.stringify(manifest, null, 2),
-                        size: () => JSON.stringify(manifest, null, 2).length,
+                        source: () => content,
+                        size: () => Buffer.byteLength(content),
                     };
                 }
             );
@@ -43,6 +59,12 @@ module.exports = {
             link: [{ rel: "manifest", href: "manifest.json" }],
         }),
         new ManifestPlugin(),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: "src/favicon", to: "favicon" },
+                { from: "src/sw.js", to: "sw.js" },
+            ],
+        }),
     ],
     devServer: {
         static: "./dist",
