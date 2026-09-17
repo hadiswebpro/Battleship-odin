@@ -2,25 +2,33 @@ import Game from "./game";
 import { createBoard, createPlacementBoard, playSound } from "./dom";
 
 let activeGame = null;
+let computerTimer = null;
 
-export function startGameFlow(mode = "computer") {
-  const game = new Game(mode);
+export function startGameFlow(mode = "computer", existingGame = null) {
+  const game = existingGame || new Game(mode);
   activeGame = game;
+  clearTimeout(computerTimer);
 
   const playerBoard = document.querySelector("#player-board");
   const placementScreen = document.querySelector("#placement-screen");
   const modeScreen = document.querySelector("#mode-screen");
+  const gameScreen = document.querySelector("#game");
+  const readyModal = document.querySelector("#ready-modal");
+  const winnerModal = document.querySelector("#winner-modal");
+  const quitModal = document.querySelector("#quit-modal");
 
   if (!playerBoard || !placementScreen) return game;
 
-  placementScreen.classList.remove("hidden");
   modeScreen?.classList.add("hidden");
+  gameScreen?.classList.add("hidden");
+  placementScreen.classList.remove("hidden");
+  readyModal?.classList.add("hidden");
+  winnerModal?.classList.add("hidden");
+  quitModal?.classList.add("hidden");
 
-  createPlacementBoard(playerBoard, game.player1, () => {
-    showReadyModal(() => startBattle(game));
-  });
-
+  createPlacementBoard(playerBoard, game.player1, () => showReadyModal(() => startBattle(game)));
   connectBackButtons();
+  connectGlobalExitControls();
   return game;
 }
 
@@ -29,7 +37,6 @@ function startBattle(game) {
   const gameScreen = document.querySelector("#game");
   const yourBoard = document.querySelector("#your-board");
   const enemyBoard = document.querySelector("#enemy-board");
-
   if (!gameScreen || !yourBoard || !enemyBoard) return;
 
   placementScreen?.classList.add("hidden");
@@ -56,7 +63,7 @@ function connectEnemyBoard(game) {
     const result = game.attack(coordinate);
     if (result === "already") return;
 
-    cell.classList.add(result);
+    createBoard(document.querySelector("#enemy-board"), game.player2.gameboard, game.player2.name, true);
     playSound(result === "hit" ? "hit" : "miss");
 
     if (game.isGameOver()) {
@@ -68,9 +75,9 @@ function connectEnemyBoard(game) {
     board.style.pointerEvents = "none";
 
     if (game.mode === "computer" && game.currentPlayer === game.player2) {
-      setTimeout(() => {
+      computerTimer = setTimeout(() => {
         const computerResult = game.computerTurn();
-        renderBattleBoard(yourBoardElement(), game.player1);
+        createBoard(document.querySelector("#your-board"), game.player1.gameboard, game.player1.name, false);
 
         if (computerResult) playSound(computerResult === "hit" ? "hit" : "miss");
 
@@ -80,58 +87,56 @@ function connectEnemyBoard(game) {
           board.style.pointerEvents = "auto";
           updateTurn("Player Turn");
         }
-      }, 600);
-    } else {
-      board.style.pointerEvents = "auto";
-      updateTurn("Player 2 Turn");
+      }, 2500);
     }
   };
 }
 
-function yourBoardElement() {
-  return document.querySelector("#your-board");
-}
-
-function renderBattleBoard(element, player) {
-  createBoard(element, player.gameboard, player.name, false);
-}
-
 function connectBattleControls() {
-  document.querySelector("#quit-game")?.addEventListener("click", showQuitModal);
-  document.querySelector("#continue-game")?.addEventListener("click", hideQuitModal);
+  const quit = document.querySelector("#quit-game");
+  const continueButton = document.querySelector("#continue-game");
+  const mainMenu = document.querySelector("#main-menu");
+  const restart = document.querySelector("#play-again");
+  const winnerMenu = document.querySelector("#winner-main-menu");
+  const winnerStay = document.querySelector("#winner-cancel");
 
-  document.querySelector("#main-menu")?.addEventListener("click", showExitModal);
-  document.querySelector("#play-again")?.addEventListener("click", showExitModal);
-  document.querySelector("#winner-main-menu")?.addEventListener("click", showExitModal);
-  document.querySelector("#winner-cancel")?.addEventListener("click", hideWinnerModal);
+  if (quit) quit.onclick = showQuitModal;
+  if (continueButton) continueButton.onclick = hideQuitModal;
+  if (mainMenu) mainMenu.onclick = returnToStart;
+  if (restart) restart.onclick = restartGame;
+  if (winnerMenu) winnerMenu.onclick = returnToStart;
+  if (winnerStay) winnerStay.onclick = hideWinnerModal;
 }
 
 function connectBackButtons() {
-  document.querySelectorAll(".back-btn").forEach((button) => {
-    button.onclick = () => {
-      const placement = document.querySelector("#placement-screen");
-      if (!placement || placement.classList.contains("hidden")) return;
-      showExitModal();
-    };
-  });
+  const placementBack = document.querySelector("#placement-back");
+  if (placementBack) placementBack.onclick = showExitModal;
+
+  const modeBack = document.querySelector("#mode-back");
+  if (modeBack) modeBack.onclick = returnToStart;
+}
+
+function connectGlobalExitControls() {
+  const confirmExit = document.querySelector("#confirm-exit");
+  const cancelExit = document.querySelector("#cancel-exit");
+  if (confirmExit) confirmExit.onclick = returnToStart;
+  if (cancelExit) cancelExit.onclick = hideExitModal;
 }
 
 function showReadyModal(callback) {
   const modal = document.querySelector("#ready-modal");
   const startButton = document.querySelector("#start-battle");
   const cancelButton = document.querySelector("#cancel-ready");
-
   if (!modal || !startButton) {
     callback();
     return;
   }
-
   modal.classList.remove("hidden");
   startButton.onclick = () => {
     modal.classList.add("hidden");
     callback();
   };
-  cancelButton && (cancelButton.onclick = () => modal.classList.add("hidden"));
+  if (cancelButton) cancelButton.onclick = () => modal.classList.add("hidden");
 }
 
 function showExitModal() {
@@ -155,7 +160,16 @@ function hideWinnerModal() {
 }
 
 function returnToStart() {
+  clearTimeout(computerTimer);
   window.location.reload();
+}
+
+function restartGame() {
+  clearTimeout(computerTimer);
+  const mode = activeGame?.mode || "computer";
+  const freshGame = new Game(mode);
+  activeGame = freshGame;
+  startGameFlow(mode, freshGame);
 }
 
 function showWinnerModal(game) {
@@ -172,6 +186,3 @@ function updateTurn(text) {
   const turn = document.querySelector("#turn-status");
   if (turn) turn.textContent = text;
 }
-
-document.querySelector("#confirm-exit")?.addEventListener("click", returnToStart);
-document.querySelector("#cancel-exit")?.addEventListener("click", hideExitModal);
