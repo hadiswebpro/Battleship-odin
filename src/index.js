@@ -1,6 +1,6 @@
 import "./style.css";
 import { startGameFlow } from "./gameFlow";
-import { enableButtonSounds } from "./dom";
+import { enableButtonSounds, playSound } from "./dom";
 import mainShipImage from "./images/ship.webp";
 
 const startScreen = document.querySelector("#start-screen");
@@ -32,6 +32,7 @@ function switchScreen(from, to) {
 }
 
 startButton?.addEventListener("click", () => {
+  playSound("button");
   switchScreen(startScreen, modeScreen);
 });
 
@@ -40,6 +41,7 @@ modeBackButton?.addEventListener("click", () => {
 });
 
 computerButton?.addEventListener("click", () => {
+  playSound("button");
   modeScreen?.classList.add("hidden");
   window.setTimeout(() => startGameFlow("computer"), SCREEN_DELAY);
 });
