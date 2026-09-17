@@ -30,11 +30,21 @@ function startBattle(game) {
   document.querySelector("#placement-screen")?.classList.add("hidden");
   document.querySelector("#game")?.classList.remove("hidden");
 
-  createBoard(document.querySelector("#your-board"), game.player1.gameboard, game.player1.name, false);
-  createBoard(document.querySelector("#enemy-board"), game.player2.gameboard, game.player2.name, true);
+  createBoard(
+    document.querySelector("#your-board"),
+    game.player1.gameboard,
+    game.player1.name,
+    false,
+  );
+  createBoard(
+    document.querySelector("#enemy-board"),
+    game.player2.gameboard,
+    game.player2.name,
+    true,
+  );
 
   connectEnemyBoard(game);
-  connectBattleControls(game);
+  connectBattleControls();
   updateTurn("Player Turn");
 }
 
@@ -44,12 +54,14 @@ function connectEnemyBoard(game) {
 
   board.onclick = (event) => {
     const cell = event.target.closest(".cell");
-    if (!cell || game.currentPlayer !== game.player1) return;
+    if (!cell || game.currentPlayer !== game.player1 || game.isGameOver()) return;
 
-    const result = game.playTurn([
+    const coordinate = [
       Number(cell.dataset.row),
       Number(cell.dataset.col),
-    ]);
+    ];
+
+    const result = game.attack(coordinate);
 
     if (result === "already") return;
 
@@ -63,13 +75,26 @@ function connectEnemyBoard(game) {
 
     updateTurn("Enemy Turn");
 
-    if (game.mode === "computer") {
+    if (game.mode === "computer" && game.currentPlayer === game.player2) {
       setTimeout(() => {
-        game.playComputerTurn?.();
-        createBoard(document.querySelector("#your-board"), game.player1.gameboard, game.player1.name, false);
+        const computerResult = game.computerTurn();
 
-        if (game.isGameOver()) showWinnerModal(game);
-        else updateTurn("Player Turn");
+        if (computerResult) {
+          playSound(computerResult === "hit" ? "hit" : "miss");
+        }
+
+        createBoard(
+          document.querySelector("#your-board"),
+          game.player1.gameboard,
+          game.player1.name,
+          false,
+        );
+
+        if (game.isGameOver()) {
+          showWinnerModal(game);
+        } else {
+          updateTurn("Player Turn");
+        }
       }, 600);
     }
   };
