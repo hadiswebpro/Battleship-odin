@@ -306,6 +306,23 @@ body {
     cursor: grabbing
 }
 
+.ship-image.dragging {
+    opacity: .72;
+    transform-origin: top left;
+}
+
+.ship-image.horizontal.dragging {
+    transform: rotate(90deg) translateY(-100%);
+}
+
+@media (pointer: coarse) {
+    .ship-image {
+        touch-action: none;
+        user-select: none;
+        -webkit-user-drag: none;
+    }
+}
+
 .ship-image.horizontal {
     transform: rotate(90deg) translateY(-100%)
 }
