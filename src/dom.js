@@ -95,6 +95,7 @@ export function enableShipPlacement(boardElement, player, onReady) {
   let preview = null;
   let draggedShip = null;
   let wasDragging = false;
+  let touchDragging = false;
 
   const buttons = [...document.querySelectorAll(".ship-option")];
 
@@ -123,13 +124,13 @@ export function enableShipPlacement(boardElement, player, onReady) {
 
   boardElement.querySelectorAll(".cell").forEach((cell) => {
     cell.onmouseenter = () => {
-      if (!selectedShip) return;
+      if (!selectedShip || touchDragging) return;
       preview = { row: +cell.dataset.row, col: +cell.dataset.col };
       renderPreview(preview, boardElement, selectedShip, direction, player);
     };
 
     cell.onclick = () => {
-      if (!selectedShip || !preview) return;
+      if (!selectedShip || !preview || touchDragging) return;
       const coordinates = getCoordinates(preview.row, preview.col, selectedShip.length, direction);
       if (!coordinates || !isValidPlacement(player, coordinates)) return;
 
@@ -150,9 +151,7 @@ export function enableShipPlacement(boardElement, player, onReady) {
       const row = Number(cell.dataset.row);
       const col = Number(cell.dataset.col);
       const shipDirection = ship.direction || "vertical";
-      const coordinates = getCoordinates(row, col, ship.length, shipDirection);
       renderPreview({ row, col }, boardElement, { name: ship.name, length: ship.length }, shipDirection, ship);
-      if (!coordinates) clearPreview(boardElement);
     };
 
     cell.ondrop = (event) => {
@@ -179,14 +178,17 @@ export function enableShipPlacement(boardElement, player, onReady) {
     if (!ship) return;
 
     img.draggable = true;
+    img.style.touchAction = "none";
+
     img.onclick = (event) => {
       event.stopPropagation();
-      if (wasDragging) {
+      if (wasDragging || touchDragging) {
         wasDragging = false;
         return;
       }
       rotatePlacedShip(boardElement, player, ship, onReady);
     };
+
     img.ondragstart = (event) => {
       wasDragging = true;
       draggedShip = { ship };
@@ -194,11 +196,115 @@ export function enableShipPlacement(boardElement, player, onReady) {
       event.dataTransfer.setData("text/plain", ship.name);
       img.classList.add("dragging");
     };
+
     img.ondragend = () => {
       img.classList.remove("dragging");
       draggedShip = null;
       clearPreview(boardElement);
     };
+
+    // Native HTML drag-and-drop does not work reliably on touch screens.
+    // Pointer events provide the same drag/preview/drop behavior for phones and tablets.
+    img.onpointerdown = (event) => {
+      if (event.pointerType === "mouse") return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      touchDragging = true;
+      wasDragging = true;
+      draggedShip = { ship };
+      img.classList.add("dragging");
+      img.setPointerCapture?.(event.pointerId);
+
+      // Let elementFromPoint() see the board cells instead of the ship image.
+      img.style.pointerEvents = "none";
+
+      updateTouchPreview(event);
+    };
+
+    img.onpointermove = (event) => {
+      if (!touchDragging || event.pointerType === "mouse") return;
+      event.preventDefault();
+      updateTouchPreview(event);
+    };
+
+    img.onpointerup = (event) => {
+      if (!touchDragging || event.pointerType === "mouse") return;
+      event.preventDefault();
+      finishTouchDrag(event, img, ship);
+    };
+
+    img.onpointercancel = () => {
+      if (!touchDragging) return;
+      cancelTouchDrag(img);
+    };
+
+    function updateTouchPreview(event) {
+      const cell = document.elementFromPoint(event.clientX, event.clientY)
+        ?.closest?.(".placement-screen #player-board .cell");
+
+      if (!cell) {
+        clearPreview(boardElement);
+        preview = null;
+        return;
+      }
+
+      const row = Number(cell.dataset.row);
+      const col = Number(cell.dataset.col);
+      preview = { row, col };
+
+      renderPreview(
+        preview,
+        boardElement,
+        { name: ship.name, length: ship.length },
+        ship.direction || "vertical",
+        player,
+        ship
+      );
+    }
+
+    function finishTouchDrag(event, image, dragged) {
+      const cell = document.elementFromPoint(event.clientX, event.clientY)
+        ?.closest?.(".placement-screen #player-board .cell");
+
+      const coordinates = cell
+        ? getCoordinates(
+            Number(cell.dataset.row),
+            Number(cell.dataset.col),
+            dragged.length,
+            dragged.direction || "vertical"
+          )
+        : null;
+
+      if (coordinates && isValidPlacement(player, coordinates, dragged)) {
+        movePlacedShip(player, dragged, coordinates);
+        clearPlacementError();
+        cleanupTouchDrag(image);
+        createBoard(boardElement, player.gameboard, player.name);
+        enableShipPlacement(boardElement, player, onReady);
+        return;
+      }
+
+      clearPreview(boardElement);
+      cleanupTouchDrag(image);
+    }
+
+    function cancelTouchDrag(image) {
+      clearPreview(boardElement);
+      cleanupTouchDrag(image);
+    }
+
+    function cleanupTouchDrag(image) {
+      image.style.pointerEvents = "";
+      image.classList.remove("dragging");
+      draggedShip = null;
+      preview = null;
+      touchDragging = false;
+      window.setTimeout(() => {
+        wasDragging = false;
+      }, 0);
+    }
   });
 }
 
