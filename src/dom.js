@@ -96,6 +96,9 @@ export function enableShipPlacement(boardElement, player, onReady) {
   let draggedShip = null;
   let wasDragging = false;
   let touchDragging = false;
+  let touchMoved = false;
+  let touchStartX = 0;
+  let touchStartY = 0;
 
   const buttons = [...document.querySelectorAll(".ship-option")];
 
@@ -212,7 +215,10 @@ export function enableShipPlacement(boardElement, player, onReady) {
       event.stopPropagation();
 
       touchDragging = true;
-      wasDragging = true;
+      touchMoved = false;
+      touchStartX = event.clientX;
+      touchStartY = event.clientY;
+      wasDragging = false;
       draggedShip = { ship };
       img.classList.add("dragging");
       img.setPointerCapture?.(event.pointerId);
@@ -226,7 +232,20 @@ export function enableShipPlacement(boardElement, player, onReady) {
     img.onpointermove = (event) => {
       if (!touchDragging || event.pointerType === "mouse") return;
       event.preventDefault();
-      updateTouchPreview(event);
+
+      const distance = Math.hypot(
+        event.clientX - touchStartX,
+        event.clientY - touchStartY
+      );
+
+      if (distance > 8) {
+        touchMoved = true;
+        wasDragging = true;
+      }
+
+      if (touchMoved) {
+        updateTouchPreview(event);
+      }
     };
 
     img.onpointerup = (event) => {
@@ -265,6 +284,12 @@ export function enableShipPlacement(boardElement, player, onReady) {
     }
 
     function finishTouchDrag(event, image, dragged) {
+      if (!touchMoved) {
+        cleanupTouchDrag(image);
+        rotatePlacedShip(boardElement, player, dragged, onReady);
+        return;
+      }
+
       const cell = document.elementFromPoint(event.clientX, event.clientY)
         ?.closest?.(".placement-screen #player-board .cell");
 
@@ -301,6 +326,7 @@ export function enableShipPlacement(boardElement, player, onReady) {
       draggedShip = null;
       preview = null;
       touchDragging = false;
+      touchMoved = false;
       window.setTimeout(() => {
         wasDragging = false;
       }, 0);
