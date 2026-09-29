@@ -1,51 +1,66 @@
-# Battleship
+# ⚓ Battleship
 
-A browser-based **Battleship** game built with vanilla JavaScript as part of **The Odin Project**.
+A responsive, installable **Battleship** game built with Vanilla JavaScript as part of **The Odin Project**.
 
-The project focuses on organizing game logic into modules, handling player interaction, and writing tests for the core Battleship functionality.
+## 🎮 Live Preview
 
-## ✨ Live Preview
+👉 **[Play Battleship](https://hadiswebpro.github.io/Battleship-odin/)**
 
-**[Play Battleship →](https://hadiswebpro.github.io/Battleship-odin/)**
+The game is designed to work as a **Progressive Web App (PWA)**, so it can be installed from a supported browser and launched as a standalone app.
 
-## 🎮 Features
+## ✨ Features
 
-- Play Battleship directly in the browser
-- Interactive game board
-- Player and opponent gameplay
-- Ship placement and attacks
-- Hit and miss handling
-- Turn-based game flow
-- Win detection
-- Responsive interface
+- ⚓ Battleship gameplay against the computer
+- 🚢 Place five ships on a 10×10 board
+- 🔄 Tap a placed ship to rotate it
+- 🖱️ Drag and drop ships with mouse
+- 📱 Touch-friendly ship dragging on phones and tablets
+- ↔️ Responsive portrait and landscape layouts
+- 🎯 Hit and miss markers
+- 🤖 Computer opponent
+- 🏆 Win detection and restart flow
+- 🔊 Background music and game sound effects
+- 📲 Installable PWA
+- 📴 Offline app-shell caching with a Service Worker
+
+## 🧩 How ship placement works
+
+1. Select a ship.
+2. Place it on the board.
+3. Tap an already placed ship to rotate it.
+4. Drag a placed ship to move it.
+5. If a rotation or placement would go outside the board or overlap another ship, the game shows an error instead of changing the position.
+
+On touch devices, a short tap is treated as **rotate**, while an actual drag is treated as **move**.
 
 ## 🛠️ Built With
 
 - HTML
 - CSS
-- JavaScript (ES6 modules)
+- Vanilla JavaScript (ES6 modules)
 - Webpack
-- Jest
 - Babel
+- Jest
+- Progressive Web App APIs
 
 ## 🧠 What I Practiced
 
-This project was built to practice JavaScript architecture and testing, including:
+This project helped me practice:
 
-- Factory functions and modules
-- Separation of game logic from UI logic
+- Modular JavaScript architecture
+- Factory/classes and game logic
 - DOM manipulation
 - Event handling
-- Arrays and objects
-- Managing game state
+- Pointer Events for touch interaction
+- Drag-and-drop interactions
+- Responsive CSS
+- State management
 - Unit testing with Jest
-- Test-driven development concepts
-- Webpack module bundling
-- Writing maintainable JavaScript
+- Webpack bundling
+- Service Workers and offline caching
+- PWA manifests and installability
 
 ## 🧪 Testing
-
-The project uses **Jest** for testing the core game logic.
 
 Run the test suite with:
 
@@ -55,31 +70,14 @@ npm test
 
 ## 🚀 Run Locally
 
-Clone the repository:
-
 ```bash
 git clone https://github.com/hadiswebpro/Battleship-odin.git
-```
-
-Move into the project:
-
-```bash
 cd Battleship-odin
-```
-
-Install dependencies:
-
-```bash
 npm install
-```
-
-Start the development server:
-
-```bash
 npm run dev
 ```
 
-You can also create a production build with:
+For a production build:
 
 ```bash
 npm run build
@@ -87,14 +85,10 @@ npm run build
 
 ## 📌 The Odin Project
 
-This project was created while working through the **JavaScript curriculum of The Odin Project**, with a focus on modular JavaScript, testing, and building a complete browser game from scratch.
+Built while following **The Odin Project JavaScript curriculum**, with a focus on game architecture, testing, and maintainable modular code.
 
 ## 👩🏻‍💻 Author
 
 **Hadis Rezaee**
 
 GitHub: [@hadiswebpro](https://github.com/hadiswebpro)
-
----
-
-Built with JavaScript, Webpack, and a lot of strategic thinking.
