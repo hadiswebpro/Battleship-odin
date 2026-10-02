@@ -56,6 +56,11 @@ function startBattle(game) {
 
     createBoard(yourBoard, game.player1.gameboard, game.player1.name, false);
     createBoard(enemyBoard, game.player2.gameboard, game.player2.name, true);
+
+    // Reset the board interaction state when starting a new game.
+    // The previous game may have disabled clicks during the computer's turn.
+    enemyBoard.style.pointerEvents = "auto";
+
     connectEnemyBoard(game);
     connectBattleControls();
     updateTurn("Player Turn");
